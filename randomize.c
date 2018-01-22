@@ -22,7 +22,7 @@ typedef struct person_type
 	int treat;
 } person_t;
 
-void acknowldgements()
+void acknowledgments()
 {
 	printf("Developed by Carlos Pagola, January 2018\n\n");
 }
