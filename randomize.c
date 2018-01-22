@@ -29,7 +29,7 @@ void acknowledgments()
 int print_to_file(const char *fname, const person_t * ptr, unsigned index)
 {
 	// Open file first
-	FILE *f = fopen(fname, "w+");
+	FILE *f = fopen(fname, "a+");
 	if (f == NULL)
 	{
 		perror("Error opening file");
@@ -85,6 +85,6 @@ int main(int argc, char * argv[])
 		print_to_file(OUT_FILE, &subjects[i], i);
 	}
 	// Free memory
-	free(subjects)
+	free(subjects);
 	exit(0);
 }
