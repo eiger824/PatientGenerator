@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <sys/time.h>
 
 // Files to use
 #define		OUT_FILE		"txts/all.txt"
@@ -34,15 +35,27 @@ typedef enum param_type
 
 // Ptr to array of people
 static person_t *subjects;
+// Global computation time
+static struct timeval timer;
 
 void acknowledgments()
 {
 	printf("Developed by Carlos Pagola, January 2018\n\n");
 }
 
+double get_simulation_seconds()
+{
+	struct timeval time_now;
+	gettimeofday(&time_now, NULL);
+
+	return (double) (time_now.tv_sec - timer.tv_sec) +
+		(double) (time_now.tv_usec - timer.tv_usec) / 1e6;
+}
+
 void dump_statistics(int nr_persons)
 {
 	printf("\n****************************************\n");
+	printf("Done! Elapsed time: %.3f seconds\n", get_simulation_seconds());
 	printf("Statistics of examined patients\n");
 	printf("Number of patients in the study:\t%d\n", nr_persons);
 	printf("****************************************\n");
@@ -155,6 +168,8 @@ int main(int argc, char * argv[])
 	
 	subjects = (person_t *) malloc (sizeof *subjects * nr_persons);
 	
+	// Init time struct
+	gettimeofday(&timer, NULL);
 	for (int i=0; i<nr_persons; ++i)
 	{
 		subjects[i].age = min_age + rand() % (max_age + 1 - min_age);
