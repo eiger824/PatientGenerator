@@ -10,7 +10,7 @@
 #define 	HTA_FILE		"hta.txt"
 #define		HSA_FILE		"hsa.txt"
 #define		INC_FILE		"incid.txt"
-#define 	TREATMENT_FILE	"treatment.txt"
+#define 	TREATMENT_FILE		"treatment.txt"
 
 typedef struct person_type
 {
@@ -22,7 +22,7 @@ typedef struct person_type
 	int treat;
 } person_t;
 
-void acknowldgements()
+void acknowledgments()
 {
 	printf("Developed by Carlos Pagola, January 2018\n\n");
 }
