@@ -10,7 +10,7 @@
 #define 	HTA_FILE		"hta.txt"
 #define		HSA_FILE		"hsa.txt"
 #define		INC_FILE		"incid.txt"
-#define 	TREATMENT_FILE		"treatment.txt"
+#define 	TREATMENT_FILE	"treatment.txt"
 
 typedef struct person_type
 {
@@ -22,7 +22,7 @@ typedef struct person_type
 	int treat;
 } person_t;
 
-void acknowledgments()
+void acknowldgements()
 {
 	printf("Developed by Carlos Pagola, January 2018\n\n");
 }
@@ -46,6 +46,7 @@ int print_to_file(const char *fname, const char *format, ...)
 	fclose(f);
 	// Free memory
 	va_end(args);
+	return 0;
 }
 
 int main(int argc, char * argv[])
@@ -75,15 +76,17 @@ int main(int argc, char * argv[])
 	printf("Enter age range (MAX): ");
 	scanf("%d", &max_age);
 	
-	// Action!
-	fp = fopen("out.txt", "w+");
-	if (fp == NULL)
-	{
-		perror("Unable to open file");
-		exit(1);
-	}
 	for (int i=0; i<nr_persons; ++i)
 	{
+		print_to_file(OUT_FILE, "----------- Patient %d -----------\n", i + 1);
+		print_to_file(OUT_FILE, "Age:\t\t%d\n", min_age + rand() % (max_age + 1 - min_age));
+		print_to_file(OUT_FILE, "Sex:\t\t%s\n", (rand() < RAND_MAX / 2) ? "M" : "F");
+		print_to_file(OUT_FILE, "HTA:\t\t%s\n", (rand() < RAND_MAX / 2) ? "Y" : "N");
+		print_to_file(OUT_FILE, "HSA:\t\t%s\n", (rand() < RAND_MAX / 2) ? "Y" : "N");
+		print_to_file(OUT_FILE, "Incid.:\t\t%s\n", (rand() < RAND_MAX / 2) ? "Y" : "N");
+		print_to_file(OUT_FILE, "Treatment:\t%s\n", (rand() < RAND_MAX / 2) ? "A" : "B");
+		print_to_file(OUT_FILE, "----------------------------------\n");
+		/*
 		fprintf(fp, "----------- Patient %d -----------\n", i + 1);
 		fprintf(fp, "Age:\t\t%d\n", min_age + rand() % (max_age + 1 - min_age));
 		fprintf(fp, "Sex:\t\t%s\n", (rand() < RAND_MAX / 2) ? "M" : "F");
@@ -92,8 +95,7 @@ int main(int argc, char * argv[])
 		fprintf(fp, "Incid.:\t\t%s\n", (rand() < RAND_MAX / 2) ? "Y" : "N");
 		fprintf(fp, "Treatment:\t%s\n", (rand() < RAND_MAX / 2) ? "A" : "B");
 		fprintf(fp, "----------------------------------\n");
+		*/
 	}
-	// Close file
-	fclose(fp);
 	exit(0);
 }
