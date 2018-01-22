@@ -71,7 +71,7 @@ int print_separate_file(param_t p, int val)
 		break;
 		case TREAT:
 		strcpy(fname, TREATMENT_FILE);
-		break:
+		break;
 		default:
 		fprintf(stderr, "Unrecognized parameter\n");
 		return -1;
@@ -167,7 +167,7 @@ int main(int argc, char * argv[])
 		print_to_file(OUT_FILE, &subjects[i], i);
 	}
 	// Output some statistics
-	dump_statistics();
+	dump_statistics(nr_persons);
 	// Free memory
 	free(subjects);
 	exit(0);
