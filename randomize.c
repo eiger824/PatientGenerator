@@ -36,14 +36,14 @@ int print_to_file(const char *fname, const person_t * ptr, unsigned index)
 		return -1;
 	}
 	// Write to file
-	print_to_file(OUT_FILE, "----------- Patient %d -----------\n", index + 1);
-	print_to_file(OUT_FILE, "Age:\t\t%d\n", ptr->age);
-	print_to_file(OUT_FILE, "Sex:\t\t%s\n", ptr->sex);
-	print_to_file(OUT_FILE, "HTA:\t\t%s\n", ptr->hta);
-	print_to_file(OUT_FILE, "HSA:\t\t%s\n", ptr->hsa);
-	print_to_file(OUT_FILE, "Incid.:\t\t%s\n", ptr->inc);
-	print_to_file(OUT_FILE, "Treatment:\t%s\n", ptr->treat);
-	print_to_file(OUT_FILE, "----------------------------------\n");
+	fprintf(f, "----------- Patient %d -----------\n", index + 1);
+	fprintf(f, "Age:\t\t%d\n", ptr->age);
+	fprintf(f, "Sex:\t\t%s\n", ptr->sex);
+	fprintf(f, "HTA:\t\t%s\n", ptr->hta);
+	fprintf(f, "HSA:\t\t%s\n", ptr->hsa);
+	fprintf(f, "Incid.:\t\t%s\n", ptr->inc);
+	fprintf(f, "Treatment:\t%s\n", ptr->treat);
+	fprintf(f, "----------------------------------\n");
 	// And close it
 	fclose(f);
 	return 0;
