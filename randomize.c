@@ -38,11 +38,11 @@ int print_to_file(const char *fname, const person_t * ptr, unsigned index)
 	// Write to file
 	fprintf(f, "----------- Patient %d -----------\n", index + 1);
 	fprintf(f, "Age:\t\t%d\n", ptr->age);
-	fprintf(f, "Sex:\t\t%s\n", ptr->sex);
-	fprintf(f, "HTA:\t\t%s\n", ptr->hta);
-	fprintf(f, "HSA:\t\t%s\n", ptr->hsa);
-	fprintf(f, "Incid.:\t\t%s\n", ptr->inc);
-	fprintf(f, "Treatment:\t%s\n", ptr->treat);
+	fprintf(f, "Sex:\t\t%c\n", ptr->sex);
+	fprintf(f, "HTA:\t\t%c\n", ptr->hta);
+	fprintf(f, "HSA:\t\t%c\n", ptr->hsa);
+	fprintf(f, "Incid.:\t\t%c\n", ptr->inc);
+	fprintf(f, "Treatment:\t%c\n", ptr->treat);
 	fprintf(f, "----------------------------------\n");
 	// And close it
 	fclose(f);
@@ -82,7 +82,7 @@ int main(int argc, char * argv[])
 		subjects[i].inc = (rand() < RAND_MAX / 2) ? 'Y' : 'N';
 		subjects[i].treat = (rand() < RAND_MAX / 2) ? 'A' : 'B';
 		// Print the whole person entry
-		print_to_file(OUT_FILE, subjects[i], i);
+		print_to_file(OUT_FILE, &subjects[i], i);
 	}
 	// Free memory
 	free(subjects)
