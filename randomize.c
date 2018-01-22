@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdarg.h>
 #include <time.h>
 
 // Files to use
@@ -15,11 +14,11 @@
 typedef struct person_type
 {
 	int age;
-	int sex;
-	int hta;
-	int hsa;
-	int inc;
-	int treat;
+	char sex;
+	char hta;
+	char hsa;
+	char inc;
+	char treat;
 } person_t;
 
 void acknowledgments()
@@ -27,12 +26,8 @@ void acknowledgments()
 	printf("Developed by Carlos Pagola, January 2018\n\n");
 }
 
-int print_to_file(const char *fname, const char *format, ...)
+int print_to_file(const char *fname, const person_t * ptr, unsigned index)
 {
-	// Init variadic list
-	va_list args;
-	va_start(args, format);
-	
 	// Open file first
 	FILE *f = fopen(fname, "w+");
 	if (f == NULL)
@@ -41,26 +36,26 @@ int print_to_file(const char *fname, const char *format, ...)
 		return -1;
 	}
 	// Write to file
-	vfprintf(f, format, args);
+	print_to_file(OUT_FILE, "----------- Patient %d -----------\n", index + 1);
+	print_to_file(OUT_FILE, "Age:\t\t%d\n", ptr->age);
+	print_to_file(OUT_FILE, "Sex:\t\t%s\n", ptr->sex);
+	print_to_file(OUT_FILE, "HTA:\t\t%s\n", ptr->hta);
+	print_to_file(OUT_FILE, "HSA:\t\t%s\n", ptr->hsa);
+	print_to_file(OUT_FILE, "Incid.:\t\t%s\n", ptr->inc);
+	print_to_file(OUT_FILE, "Treatment:\t%s\n", ptr->treat);
+	print_to_file(OUT_FILE, "----------------------------------\n");
 	// And close it
 	fclose(f);
-	// Free memory
-	va_end(args);
 	return 0;
 }
 
 int main(int argc, char * argv[])
 {
-	FILE *fp; // Dump all patients on a pretty list
-	FILE *ages;
-	FILE *sexes;
-	FILE *htas;
-	FILE *hsas;
-	FILE *incs;
-	FILE *treats;
 	int nr_persons;
 	int min_age;
 	int max_age;
+	// Ptr to array of people
+	person_t *subjects;
 	
 	// Initialize random seed
 	srand (time (NULL));
@@ -76,26 +71,20 @@ int main(int argc, char * argv[])
 	printf("Enter age range (MAX): ");
 	scanf("%d", &max_age);
 	
+	subjects = (person_t *) malloc (sizeof *subjects * nr_persons);
+	
 	for (int i=0; i<nr_persons; ++i)
 	{
-		print_to_file(OUT_FILE, "----------- Patient %d -----------\n", i + 1);
-		print_to_file(OUT_FILE, "Age:\t\t%d\n", min_age + rand() % (max_age + 1 - min_age));
-		print_to_file(OUT_FILE, "Sex:\t\t%s\n", (rand() < RAND_MAX / 2) ? "M" : "F");
-		print_to_file(OUT_FILE, "HTA:\t\t%s\n", (rand() < RAND_MAX / 2) ? "Y" : "N");
-		print_to_file(OUT_FILE, "HSA:\t\t%s\n", (rand() < RAND_MAX / 2) ? "Y" : "N");
-		print_to_file(OUT_FILE, "Incid.:\t\t%s\n", (rand() < RAND_MAX / 2) ? "Y" : "N");
-		print_to_file(OUT_FILE, "Treatment:\t%s\n", (rand() < RAND_MAX / 2) ? "A" : "B");
-		print_to_file(OUT_FILE, "----------------------------------\n");
-		/*
-		fprintf(fp, "----------- Patient %d -----------\n", i + 1);
-		fprintf(fp, "Age:\t\t%d\n", min_age + rand() % (max_age + 1 - min_age));
-		fprintf(fp, "Sex:\t\t%s\n", (rand() < RAND_MAX / 2) ? "M" : "F");
-		fprintf(fp, "HTA:\t\t%s\n", (rand() < RAND_MAX / 2) ? "Y" : "N");
-		fprintf(fp, "HSA:\t\t%s\n", (rand() < RAND_MAX / 2) ? "Y" : "N");
-		fprintf(fp, "Incid.:\t\t%s\n", (rand() < RAND_MAX / 2) ? "Y" : "N");
-		fprintf(fp, "Treatment:\t%s\n", (rand() < RAND_MAX / 2) ? "A" : "B");
-		fprintf(fp, "----------------------------------\n");
-		*/
+		subjects[i].age = min_age + rand() % (max_age + 1 - min_age);
+		subjects[i].sex = (rand() < RAND_MAX / 2) ? 'M' : 'F';
+		subjects[i].hta = (rand() < RAND_MAX / 2) ? 'Y' : 'N';
+		subjects[i].hsa = (rand() < RAND_MAX / 2) ? 'Y' : 'N';
+		subjects[i].inc = (rand() < RAND_MAX / 2) ? 'Y' : 'N';
+		subjects[i].treat = (rand() < RAND_MAX / 2) ? 'A' : 'B';
+		// Print the whole person entry
+		print_to_file(OUT_FILE, subjects[i], i);
 	}
+	// Free memory
+	free(subjects)
 	exit(0);
 }
