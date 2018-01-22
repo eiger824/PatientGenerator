@@ -4,13 +4,13 @@
 #include <time.h>
 
 // Files to use
-#define		OUT_FILE		"all.txt"
-#define 	AGES_FILE		"ages.txt"
-#define		SEXES_FILE		"sexes.txt"
-#define 	HTA_FILE		"hta.txt"
-#define		HSA_FILE		"hsa.txt"
-#define		INC_FILE		"incid.txt"
-#define 	TREATMENT_FILE	"treatment.txt"
+#define		OUT_FILE		"txts/all.txt"
+#define 	AGES_FILE		"txts/ages.txt"
+#define		SEXES_FILE		"txts/sexes.txt"
+#define 	HTA_FILE		"txts/hta.txt"
+#define		HSA_FILE		"txts/hsa.txt"
+#define		INC_FILE		"txts/incid.txt"
+#define 	TREATMENT_FILE		"txts/treatment.txt"
 
 typedef struct person_type
 {
