@@ -1,13 +1,38 @@
-CC = gcc
-CFLAGS = -Wall -Wextra -Wpedantic -g --std=c11
+CC 				= gcc
+DEBUG 			= -DDEBUG_ENABLED
+CFLAGS 			= -Wall -Wextra -Wpedantic -g --std=c11 -fPIC ${DEBUG}
+CFLAGS_COMPILE 	= -c
 
-all: clean txts test
+BUILD 			= build
+TXTS			= txts
 
-txts:
-	test -d txts || mkdir txts
+PROGRAM 		= test
+OBJS 			= ${BUILD}/dll.o \
+				  ${BUILD}/db.o \
+				  ${BUILD}/randomize.o
 
-test: randomize.c
-	${CC} ${CFLAGS} $^ -o $@
+all: clean ${TXTS} ${BUILD} ${PROGRAM} 
+
+${TXTS}:
+	test -d ${TXTS} || mkdir ${TXTS} 
+
+${BUILD}:
+	test -d ${BUILD} || mkdir ${BUILD} 
+
+test: ${OBJS} 
+	${CC} ${CFLAGS} $^ -o ${BUILD}/$@
+	rm -f ${PROGRAM}
+	ln -s ${BUILD}/$@ ${PROGRAM}
+
+${BUILD}/dll.o: dll.c dll.h
+	${CC} ${CFLAGS} ${CFLAGS_COMPILE} $< -o $@
+
+${BUILD}/db.o: db.c db.h
+	${CC} ${CFLAGS} ${CFLAGS_COMPILE} $< -o $@
+
+${BUILD}/randomize.o: randomize.c dll.c dll.h db.c db.h
+	${CC} ${CFLAGS} ${CFLAGS_COMPILE} $< -o $@
 	
 clean:
-	rm -rf *~ test txts
+	rm -rf *~ ${PROGRAM} ${BUILD} ${TXTS}
+
