@@ -47,8 +47,8 @@ dll_t * db_query(int flags, const char *fmt, ...)
         ++fmt;
     }
 
-    // Init list
-    dll_t *tmp_list =  db_list;
+    // Init list by copy
+    dll_t *tmp_list =  dll_copy_list(db_list);
 
     // Parse flags
     if ((flags & AGE) == AGE)
@@ -57,17 +57,24 @@ dll_t * db_query(int flags, const char *fmt, ...)
         printf("Will select age\n");
 #endif
         // Loop through list and push every match into tmp_list
+        printf("Count now: %d\n", tmp_list->count);
         dll_node_t * nd = tmp_list->first;
-        while (nd != tmp_list->last)
+        dll_node_t *tmp = nd;
+        while (nd != tmp_list->last->next)
         {
-            person_t * p = nd->p;
-            if (p->age != age)
+            if (nd->p->age != age)
             {
-                // TODO: fix this!!! If we delete this node, we cannot use nd next!!
+                tmp = nd->next;
                 dll_delete(tmp_list, nd);
+                nd = tmp;
             }
-            nd->next = nd;
+            else
+            {
+                nd = nd->next;
+                tmp = nd;
+            }
         }
+        printf("Count now: %d\n", tmp_list->count);
     }
     if ((flags & SEX) == SEX)
     {

@@ -35,5 +35,6 @@ void dll_delete(dll_t *dlls, dll_node_t *node);
 void dll_print(dll_t *dlls);
 
 void dll_empty(dll_t *dlls);
+dll_t * dll_copy_list(dll_t * rhs);
 
 #endif /* __DOUBLYLINKEDLIST_H */

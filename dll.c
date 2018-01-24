@@ -129,7 +129,7 @@ void dll_empty(dll_t *dlls)
 void dll_print(dll_t *dlls)
 {
     dll_node_t * node = dlls->first;
-    while (node != dlls->last)
+    while (node != dlls->last->next)
     {
         person_t * ptr = node->p;
         printf("Age: %d, Sex: %c, HTA: %c, HSA: %c, Inc: %c, Treat: %c\n",
@@ -141,4 +141,16 @@ void dll_print(dll_t *dlls)
                 ptr->treat);
         node = node->next;
     }
+}
+
+dll_t * dll_copy_list(dll_t * rhs)
+{
+    dll_t * list = dll_init();
+    dll_node_t * nd = rhs->first;
+    while (nd != rhs->last->next)
+    {
+        dll_insert_end(list, nd->p);
+        nd = nd->next;
+    }
+    return list;
 }
