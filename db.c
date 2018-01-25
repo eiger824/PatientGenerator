@@ -1,10 +1,21 @@
+#include <stdio.h>
 #include <stdarg.h>
+#include <string.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #include "db.h"
 #include "def.h"
 
-dll_t *tmp_list = NULL; // List to return to other file scope
+// Must-have macro for getline function
+#define _GNU_SOURCE
+
+static dll_t * db_list = NULL; // List to use as db
+static dll_t * tmp_list = NULL; // List to return to other file scopes
+
+// We know we can have at most 6 param-keys strings
+char *params_to_search[6] = {"", "", "", "" ,"" , ""};
+static unsigned nr = 0;
 
 void db_init(person_t * p, int nr_persons)
 {
@@ -118,3 +129,126 @@ void db_free()
     free(tmp_list);
 }
 
+void db_interactive_mode()
+{
+    // In this mode, we want to enter params (keys + values) in the following form:
+    //
+    //              key=param
+    //
+    // And we start the search by hitting:
+    //
+    //              go
+    //
+    // And we exit with
+    //
+    //              exit
+    //
+    char *line = NULL; 
+    size_t len = 0;
+    ssize_t nread;
+    int retcode;
+
+    printf("\nWelcome to the minimal patient database!\n");
+    printf("\nPlease introduce your search queries in the following format:\n");
+    printf("\n\t\t\tparam=key\n\n");
+    printf("List of available params:\tage,sex,hta,hsa,inc,treat\n");
+    printf("List of available keys:\t\t0,1,2,... (for age), M (for male), F (for female), Y (for YES), N (for NO)\n");
+    printf("\nGood luck!\n\n");
+    while (( nread = getline(&line, &len, stdin)) != -1)
+    {
+        if (( retcode = db_parse_query(line)) == -1)
+            break;
+        printf("[db] ");
+    }
+    // Free line
+    free(line);
+}
+
+int db_parse_query(char * line)
+{
+    // Chop last char
+    line[strlen(line) - 1] = 0;
+    if (!strcmp(line, "exit") ||
+            !strcmp(line, "quit") ||
+            !strcmp(line, "end")) return -1;
+    else if (!strcmp(line, "help"))
+    {
+        printf("Available commands:\n\n");
+        printf("exit/quit/end:\tTerminate database\n");
+        printf("go:\t\tPerform the search\n");
+        printf("list:\t\tList all the ready-to-process parameters\n");
+        printf("clean:\t\tClean all input parameters\n\n");
+    }
+    else if (!strcmp(line, "go"))
+    {
+        // Check if any params in stack
+        if (nr > 0)
+        {
+        }
+        else
+        {
+            printf("[db] Enter some search parameters first\n");
+        }
+    }
+    else if (!strcmp(line, "clean"))
+    {
+        for (unsigned i=0; i<nr; ++i)
+        {
+            params_to_search[i] = NULL;
+        }
+        nr = 0;
+    }
+    else if (!strcmp(line, "list"))
+    {
+        if (nr > 0)
+        {
+            // Print ready-to-analyze params
+            printf("Params. ready to be analized:\n");
+            for (unsigned i=0; i<nr; ++i)
+            {
+                printf("%u - %s\n", i+1, params_to_search[i]);
+            }
+        }
+        else
+        {
+            printf("[db] Enter some search parameters first\n");
+        }
+    }
+    else
+    {
+        // See if format is OK
+        int retcode;
+        if ( (retcode = db_check_line_format(line)) == -1)
+        {
+            fprintf(stderr, "[db] Wrong format: \"%s\" -- Format must be 'key=param' (no spaces, commas, etc)\n", line);        
+        }
+        else
+        {
+            if (!retcode) // If it was 0
+            {
+                // Just push params to array
+                //TODO: Fix this!!
+                memcpy(params_to_search[nr++], line, strlen(line));
+//                 params_to_search[nr++] = line;
+            }
+        }
+    }
+    return 0;
+}
+
+int db_check_line_format(char *line)
+{
+    // Just allow empty lines (consecutive 'angry' empty hits ;-)
+    if (!strlen(line)) return 2;
+    // Below follow restrictions
+    if (!line) return -1;
+    // Format should be XXX=YYY
+    char *eq = strchr(line, '=');
+    if (!eq) return -1; // Not found
+    if (eq == line) return -1; // At the beginning
+    if (eq == (line + strlen(line)-1)) return -1;
+    // Not spaces!
+    if (strchr(line, ' ')) return -1;
+    // Otherwise return 0
+    return 0;
+}

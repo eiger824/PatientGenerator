@@ -6,11 +6,14 @@
 
 #include "dll.h"
 
-static dll_t * db_list = NULL;
-
 void db_init(person_t * p, int nr_persons);
 int db_query(int flags, const char *fmt, ...);
 void db_free();
+
+// Fancy interactive mode
+void db_interactive_mode();
+int db_parse_query(char * line);
+int db_check_line_format(char *line);
 
 
 #endif /* DB_H_ */

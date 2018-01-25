@@ -29,6 +29,7 @@ void dump_statistics(int nr_persons)
     printf("\nNumber of patients in the study:\t%d\n", nr_persons);
     printf("\n*****************************************************************\n");
 
+/*
     // Let's print some stats!
     int patients_18 = db_query(AGE, "0", 18);
     printf("Patients of age 18:\t%d (%.2f%%)\n",
@@ -36,6 +37,9 @@ void dump_statistics(int nr_persons)
     int patients_18_hta_yes = db_query(AGE | HTA, "02", 18, 'Y');
     printf("Patients of age 18 with HTA positive:\t%d (%.2f%%)\n",
             patients_18_hta_yes, 100 * ((float)patients_18_hta_yes / (float)patients_18));
+*/
+    // Enter interactive mode
+    db_interactive_mode();
 
 }
 
