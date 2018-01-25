@@ -23,7 +23,7 @@ void dll_insert_after(dll_t *dlls, dll_node_t *node, person_t * p)
 	dlls->count++;
 	new_node->prev = node;
 	new_node->next = node->next;
-	if(node->next == NULL)
+	if (node->next == NULL)
 	{
 		dlls->last = new_node;
 	}
@@ -41,7 +41,7 @@ void dll_insert_before(dll_t *dlls, dll_node_t *node, person_t * p)
 	dlls->count++;
 	new_node->prev = node->prev;
 	new_node->next = node;
-	if(node->prev == NULL)
+	if (node->prev == NULL)
 	{
 		dlls->first = new_node;
 	}
@@ -55,7 +55,7 @@ void dll_insert_before(dll_t *dlls, dll_node_t *node, person_t * p)
 
 void dll_insert_beginning(dll_t *dlls, person_t * p)
 {
-	if(dlls->first == NULL)
+	if (dlls->first == NULL)
 	{
 		dll_node_t *new_node = (dll_node_t *) malloc(sizeof(dll_node_t));
 		dlls->count++;
@@ -73,7 +73,7 @@ void dll_insert_beginning(dll_t *dlls, person_t * p)
 
 void dll_insert_end(dll_t *dlls, person_t * p)
 {
-	if(dlls->last == NULL)
+	if (dlls->last == NULL)
 	{
         dll_insert_beginning(dlls, p);
 	}
@@ -91,7 +91,7 @@ void dll_remove(dll_t *dlls, dll_node_t *node, person_t * p)
 
 void dll_delete(dll_t *dlls, dll_node_t *node)
 {
-	if(node->prev == NULL)
+	if (node->prev == NULL)
 	{
 		dlls->first = node->next;
 	}
@@ -99,7 +99,7 @@ void dll_delete(dll_t *dlls, dll_node_t *node)
 	{
 		node->prev->next = node->next;
 	}
-	if(node->next == NULL)
+	if (node->next == NULL)
 	{
 		dlls->last = node->prev;
 	}
@@ -107,7 +107,7 @@ void dll_delete(dll_t *dlls, dll_node_t *node)
 	{
 		node->next->prev = node->prev;
 	}
-    free(node->p);
+//     free(node->p);
 	free(node);
 	dlls->count--;
 }

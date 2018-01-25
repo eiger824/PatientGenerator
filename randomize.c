@@ -47,6 +47,8 @@ void dump_statistics(int nr_persons)
     printf("\n*****************************************************************\n");
 
     dll_t * result = db_query(AGE, "0", 14);
+    printf("%#llx\n", result);
+    printf("Patients of age 14:\t%.2f%%\n", 100 * ((float)result->count / (float)nr_persons));
 }
 
 int print_separate_file(param_t p, int val)

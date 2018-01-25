@@ -2,6 +2,7 @@ CC 				= gcc
 DEBUG 			= -DDEBUG_ENABLED
 CFLAGS 			= -Wall -Wextra -Wpedantic -g --std=c11 -fPIC ${DEBUG}
 CFLAGS_COMPILE 	= -c
+LDFLAGS			= 
 
 BUILD 			= build
 TXTS			= txts
@@ -20,7 +21,7 @@ ${BUILD}:
 	test -d ${BUILD} || mkdir ${BUILD} 
 
 test: ${OBJS} 
-	${CC} ${CFLAGS} $^ -o ${BUILD}/$@
+	${CC} ${CFLAGS} $^ ${LDFLAGS} -o ${BUILD}/$@
 	rm -f ${PROGRAM}
 	ln -s ${BUILD}/$@ ${PROGRAM}
 

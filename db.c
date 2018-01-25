@@ -1,7 +1,10 @@
 #include <stdarg.h>
+#include <stdlib.h>
 
 #include "db.h"
 #include "def.h"
+
+dll_t *tmp_list = NULL; // List to return to other file scope
 
 void db_init(person_t * p, int nr_persons)
 {
@@ -12,6 +15,7 @@ void db_init(person_t * p, int nr_persons)
     {
         dll_insert_end(db_list, q++);
     }
+    free(p);
 #ifdef DEBUG_ENABLED
     dll_print(db_list);
 #endif
@@ -47,8 +51,10 @@ dll_t * db_query(int flags, const char *fmt, ...)
         ++fmt;
     }
 
+    if (tmp_list)
+        free(tmp_list);
     // Init list by copy
-    dll_t *tmp_list =  dll_copy_list(db_list);
+    tmp_list =  dll_copy_list(db_list);
 
     // Parse flags
     if ((flags & AGE) == AGE)
@@ -106,12 +112,6 @@ dll_t * db_query(int flags, const char *fmt, ...)
         printf("Will select TREAT\n");
 #endif
     }
-    else
-    {
-        // Wrong flag, just return
-        return NULL;
-    }
-
 
     // Return 0 if everything went well
     return tmp_list;
@@ -121,5 +121,6 @@ void db_free()
 {
     // Do nothing for the moment
     free(db_list);
+    free(tmp_list);
 }
 
