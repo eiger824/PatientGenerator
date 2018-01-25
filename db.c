@@ -15,13 +15,12 @@ void db_init(person_t * p, int nr_persons)
     {
         dll_insert_end(db_list, q++);
     }
-    free(p);
 #ifdef DEBUG_ENABLED
     dll_print(db_list);
 #endif
 }
 
-dll_t * db_query(int flags, const char *fmt, ...)
+int db_query(int flags, const char *fmt, ...)
 {
     int age = -1;
     char sex = -1;
@@ -55,66 +54,61 @@ dll_t * db_query(int flags, const char *fmt, ...)
         free(tmp_list);
     // Init list by copy
     tmp_list =  dll_copy_list(db_list);
+#ifdef DEBUG_ENABLED
+    printf("Initial count:\t%d\n", tmp_list->count);
+#endif
 
     // Parse flags
     if ((flags & AGE) == AGE)
     {
+        // Loop through list and remove all non-matches from tmp_list
+        dll_select_all_from(tmp_list, AGE, age);
 #ifdef DEBUG_ENABLED
-        printf("Will select age\n");
+        printf("Selected AGE, count now:\t%d\n", tmp_list->count);
 #endif
-        // Loop through list and push every match into tmp_list
-        printf("Count now: %d\n", tmp_list->count);
-        dll_node_t * nd = tmp_list->first;
-        dll_node_t *tmp = nd;
-        while (nd != tmp_list->last->next)
-        {
-            if (nd->p->age != age)
-            {
-                tmp = nd->next;
-                dll_delete(tmp_list, nd);
-                nd = tmp;
-            }
-            else
-            {
-                nd = nd->next;
-                tmp = nd;
-            }
-        }
-        printf("Count now: %d\n", tmp_list->count);
     }
     if ((flags & SEX) == SEX)
     {
+        // Loop through list and remove all non-matches from tmp_list
+        dll_select_all_from(tmp_list, SEX, sex);
 #ifdef DEBUG_ENABLED
-        printf("Will select sex\n");
+        printf("Selected SEX, count now:\t%d\n", tmp_list->count);
 #endif
     }
     if ((flags & HTA) == HTA)
     {
+        // Loop through list and remove all non-matches from tmp_list
+        dll_select_all_from(tmp_list, HTA, hta);
 #ifdef DEBUG_ENABLED
-        printf("Will select HTA\n");
+        printf("Selected HTA, count now:\t%d\n", tmp_list->count);
 #endif
     }
     if ((flags & HSA) == HSA)
     {
+        // Loop through list and remove all non-matches from tmp_list
+        dll_select_all_from(tmp_list, HSA, hsa);
 #ifdef DEBUG_ENABLED
-        printf("Will select HSA\n");
+        printf("Selected HSA, count now:\t%d\n", tmp_list->count);
 #endif
     }
     if ((flags & INC) == INC)
     {
+        // Loop through list and remove all non-matches from tmp_list
+        dll_select_all_from(tmp_list, INC, inc);
 #ifdef DEBUG_ENABLED
-        printf("Will select INC\n");
+        printf("Selected INC, count now:\t%d\n", tmp_list->count);
 #endif
     }
     if ((flags & TREAT) == TREAT)
     {
+        // Loop through list and remove all non-matches from tmp_list
+        dll_select_all_from(tmp_list, TREAT, sex);
 #ifdef DEBUG_ENABLED
-        printf("Will select TREAT\n");
+        printf("Selected TREAT, count now:\t%d\n", tmp_list->count);
 #endif
     }
 
-    // Return 0 if everything went well
-    return tmp_list;
+    return tmp_list->count;
 }
 
 void db_free()

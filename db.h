@@ -9,7 +9,7 @@
 static dll_t * db_list = NULL;
 
 void db_init(person_t * p, int nr_persons);
-dll_t * db_query(int flags, const char *fmt, ...);
+int db_query(int flags, const char *fmt, ...);
 void db_free();
 
 

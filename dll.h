@@ -2,6 +2,7 @@
 #define __DOUBLYLINKEDLIST_H
 
 #include "person.h"
+#include "def.h"
 
 typedef struct dll_node_type
 {
@@ -36,5 +37,6 @@ void dll_print(dll_t *dlls);
 
 void dll_empty(dll_t *dlls);
 dll_t * dll_copy_list(dll_t * rhs);
+void dll_select_all_from(dll_t * list, param_t param, int val);
 
 #endif /* __DOUBLYLINKEDLIST_H */

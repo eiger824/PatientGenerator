@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+
 #include "dll.h"
 
 dll_t *dll_init(void)
@@ -153,4 +154,49 @@ dll_t * dll_copy_list(dll_t * rhs)
         nd = nd->next;
     }
     return list;
+}
+
+void dll_select_all_from(dll_t * list, param_t param, int val)
+{
+    dll_node_t * nd = list->first;
+    dll_node_t *tmp = nd;
+    int which = -1;
+    while (nd != list->last->next)
+    {
+        switch (param)
+        {
+            case AGE:
+                which = nd->p->age;
+                break;
+            case SEX:
+                which = nd->p->sex;
+                break;
+            case HTA:
+                which = nd->p->hta;
+                break;
+            case HSA:
+                which = nd->p->hsa;
+                break;
+            case INC:
+                which = nd->p->inc;
+                break;
+            case TREAT:
+                which = nd->p->treat;
+                break;
+            default:
+                break;
+        }
+        if (which != val)
+        {
+                tmp = nd->next;
+                dll_delete(list, nd);
+                nd = tmp;
+        }
+        else
+        {
+            nd = nd->next;
+            tmp = nd;
+        }
+        if (!list->count) break;
+    }
 }

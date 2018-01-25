@@ -9,135 +9,34 @@
 #include "def.h"
 #include "dll.h"
 #include "db.h"
+#include "timelib.h"
+#include "files.h"
 
-// Files to use
-#define		OUT_FILE		"txts/all.txt"
-#define 	AGES_FILE		"txts/ages.txt"
-#define		SEXES_FILE		"txts/sexes.txt"
-#define 	HTA_FILE		"txts/hta.txt"
-#define		HSA_FILE		"txts/hsa.txt"
-#define		INC_FILE		"txts/incid.txt"
-#define 	TREATMENT_FILE		"txts/treatment.txt"
 
 // Ptr to array of people
 static person_t *subjects;
-// Global computation time
-static struct timeval timer;
 
 void acknowledgments()
 {
     printf("Developed by Carlos Pagola, January 2018, version 0.2\n");
 }
 
-double get_simulation_seconds()
-{
-    struct timeval time_now;
-    gettimeofday(&time_now, NULL);
-
-    return (double) (time_now.tv_sec - timer.tv_sec) +
-        (double) (time_now.tv_usec - timer.tv_usec) / 1e6;
-}
-
 void dump_statistics(int nr_persons)
 {
     printf("\n*****************************************************************\n");
-    printf("Done! Elapsed time: %.3f seconds\n", get_simulation_seconds());
+    printf("Done! Elapsed time: %.3f seconds\n", time_get_sim_seconds());
     printf("Statistics of examined patients\n");
     printf("\nNumber of patients in the study:\t%d\n", nr_persons);
     printf("\n*****************************************************************\n");
 
-    dll_t * result = db_query(AGE, "0", 14);
-    printf("%#llx\n", result);
-    printf("Patients of age 14:\t%.2f%%\n", 100 * ((float)result->count / (float)nr_persons));
-}
+    // Let's print some stats!
+    int patients_18 = db_query(AGE, "0", 18);
+    printf("Patients of age 18:\t%d (%.2f%%)\n",
+            patients_18, 100 * ((float)patients_18 / (float)nr_persons));
+    int patients_18_hta_yes = db_query(AGE | HTA, "02", 18, 'Y');
+    printf("Patients of age 18 with HTA positive:\t%d (%.2f%%)\n",
+            patients_18_hta_yes, 100 * ((float)patients_18_hta_yes / (float)patients_18));
 
-int print_separate_file(param_t p, int val)
-{
-    //Open file first
-    char fname[100];
-    switch (p)
-    {
-        case AGE:
-            strcpy(fname, AGES_FILE);
-            break;
-        case SEX:
-            strcpy(fname, SEXES_FILE);
-            break;
-        case HTA:
-            strcpy(fname, HTA_FILE);
-            break;
-        case HSA:
-            strcpy(fname, HSA_FILE);
-            break;
-        case INC:
-            strcpy(fname, INC_FILE);
-            break;
-        case TREAT:
-            strcpy(fname, TREATMENT_FILE);
-            break;
-        default:
-            fprintf(stderr, "Unrecognized parameter\n");
-            return -1;
-    }
-    FILE *fp = fopen(fname, "a+");
-    if (fp == NULL)
-    {
-        perror("Error opening file");
-        return -1;
-    }
-    if (p == AGE)
-    {
-        fprintf(fp, "%d\n", val);
-    }
-    else
-    {
-        fprintf(fp, "%c\n", val);
-    }
-    fclose(fp);
-    return 0;
-}
-
-
-int print_to_file(const char *fname, const person_t * ptr, unsigned index)
-{
-    // Open file first
-    FILE *f = fopen(fname, "a+");
-    if (f == NULL)
-    {
-        perror("Error opening file");
-        return -1;
-    }
-
-
-    // New write
-    if (ptr == NULL)
-    {
-        fprintf(f, "Patient\tAge\t\tSex\t\tHTA\t\tHSA\t\tInc\t\tTreat\n");
-        fprintf(f, "-------------------------------------------------------\n");
-    }
-    else
-    {
-        fprintf(f, "%d\t\t%d\t\t%c\t\t%c\t\t%c\t\t%c\t\t%c\n",
-                index + 1,
-                ptr->age,
-                ptr->sex,
-                ptr->hta,
-                ptr->hsa,
-                ptr->inc,
-                ptr->treat);
-        fprintf(f, "-------------------------------------------------------\n");
-
-        // Print individual files
-        print_separate_file(AGE, ptr->age);
-        print_separate_file(SEX, ptr->sex);
-        print_separate_file(HTA, ptr->hta);
-        print_separate_file(HSA, ptr->hsa);
-        print_separate_file(INC, ptr->inc);
-        print_separate_file(TREAT, ptr->treat);
-    }
-    // And close it
-    fclose(f);
-    return 0;
 }
 
 void help()
@@ -207,8 +106,7 @@ int main(int argc, char * argv[])
 
     subjects = (person_t *) malloc (sizeof *subjects * nr_persons);
 
-    // Init time struct
-    gettimeofday(&timer, NULL);
+    time_start_timer();
     // First line
     print_to_file(OUT_FILE, NULL, 0);
     for (int i=0; i<nr_persons; ++i)
