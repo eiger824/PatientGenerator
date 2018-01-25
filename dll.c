@@ -158,6 +158,9 @@ dll_t * dll_copy_list(dll_t * rhs)
 
 void dll_select_all_from(dll_t * list, param_t param, int val)
 {
+    // Do stuff if something in the list
+    if (!list->count) return;
+
     dll_node_t * nd = list->first;
     dll_node_t *tmp = nd;
     int which = -1;

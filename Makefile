@@ -1,5 +1,5 @@
 CC 				= gcc
-#DEBUG 			= -DDEBUG_ENABLED
+DEBUG 			= -DDEBUG_ENABLED
 CFLAGS 			= -Wall -Wextra -Wpedantic -g --std=c11 -fPIC ${DEBUG}
 CFLAGS_COMPILE 	= -c
 LDFLAGS			= 
