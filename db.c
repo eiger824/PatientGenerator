@@ -13,9 +13,18 @@
 static dll_t * db_list = NULL; // List to use as db
 static dll_t * tmp_list = NULL; // List to return to other file scopes
 
-// We know we can have at most 6 param-keys strings
-char *params_to_search[6] = {"", "", "", "" ,"" , ""};
-static unsigned nr = 0;
+static int params_to_search[6] = {-1};
+static char * param_names[6] =
+{
+    "age",
+    "sex",
+    "hta",
+    "hsa",
+    "inc",
+    "treat"
+};
+
+static int nr = 0;
 
 void db_init(person_t * p, int nr_persons)
 {
@@ -113,7 +122,7 @@ int db_query(int flags, const char *fmt, ...)
     if ((flags & TREAT) == TREAT)
     {
         // Loop through list and remove all non-matches from tmp_list
-        dll_select_all_from(tmp_list, TREAT, sex);
+        dll_select_all_from(tmp_list, TREAT, treat);
 #ifdef DEBUG_ENABLED
         printf("Selected TREAT, count now:\t%d\n", tmp_list->count);
 #endif
@@ -154,6 +163,7 @@ void db_interactive_mode()
     printf("List of available params:\tage,sex,hta,hsa,inc,treat\n");
     printf("List of available keys:\t\t0,1,2,... (for age), M (for male), F (for female), Y (for YES), N (for NO)\n");
     printf("\nGood luck!\n\n");
+
     while (( nread = getline(&line, &len, stdin)) != -1)
     {
         if (( retcode = db_parse_query(line)) == -1)
@@ -184,6 +194,12 @@ int db_parse_query(char * line)
         // Check if any params in stack
         if (nr > 0)
         {
+            // And empty the params
+            for (unsigned i=0; i<nr; ++i)
+            {
+                params_to_search[i] = -1;
+            }
+            nr = 0;
         }
         else
         {
@@ -194,7 +210,7 @@ int db_parse_query(char * line)
     {
         for (unsigned i=0; i<nr; ++i)
         {
-            params_to_search[i] = NULL;
+            params_to_search[i] = -1;
         }
         nr = 0;
     }
@@ -204,9 +220,10 @@ int db_parse_query(char * line)
         {
             // Print ready-to-analyze params
             printf("Params. ready to be analized:\n");
-            for (unsigned i=0; i<nr; ++i)
+            for (int i=0; i<nr; ++i)
             {
-                printf("%u - %s\n", i+1, params_to_search[i]);
+                if (params_to_search[i] != -1)
+                    printf("%s - %d\n", param_names[i], params_to_search[i]);
             }
         }
         else
@@ -226,10 +243,30 @@ int db_parse_query(char * line)
         {
             if (!retcode) // If it was 0
             {
-                // Just push params to array
-                //TODO: Fix this!!
-                memcpy(params_to_search[nr++], line, strlen(line));
-//                 params_to_search[nr++] = line;
+                // Get the actual param
+                char *delim = strchr(line, '=');
+                size_t diff = delim - line;
+                line[diff] = 0;
+                printf("Line was:%s\n", line);
+                int i;
+                for (i=0; i<6; ++i)
+                {
+                    if (!strcmp(line, param_names[i]))
+                        break;
+                }
+                // 'i' should hold the position now
+                if (i < 6)
+                {
+                    if (i == 0)
+                        params_to_search[i] = atoi(++delim);
+                    else
+                        params_to_search[i] = *++delim;
+                    nr++;
+                }
+                else
+                {
+                    fprintf(stderr, "[db] Wrong parameter: \"%s\" -- See help\n", line);
+                }
             }
         }
     }
@@ -244,11 +281,12 @@ int db_check_line_format(char *line)
     if (!line) return -1;
     // Format should be XXX=YYY
     char *eq = strchr(line, '=');
-    if (!eq) return -1; // Not found
-    if (eq == line) return -1; // At the beginning
-    if (eq == (line + strlen(line)-1)) return -1;
-    // Not spaces!
-    if (strchr(line, ' ')) return -1;
+    if (    !eq ||                              /* '=' not found */
+            eq == line ||                       /* Found at the beginning */
+            eq == (line + strlen(line)-1) ||    /* Found at the end */
+            strchr(line, ' '))                  /* Space was found */
+        return -1; // Not found
     // Otherwise return 0
     return 0;
 }
+
