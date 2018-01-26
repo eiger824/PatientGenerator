@@ -129,11 +129,14 @@ void dll_empty(dll_t *dlls)
 
 void dll_print(dll_t *dlls)
 {
+    // Print a side index - easier to read
+    unsigned index = 0;
     dll_node_t * node = dlls->first;
     while (node != dlls->last->next)
     {
         person_t * ptr = node->p;
-        printf("Age: %d, Sex: %c, HTA: %c, HSA: %c, Inc: %c, Treat: %c\n",
+        printf("%d)\tAge: %d, Sex: %c, HTA: %c, HSA: %c, Inc: %c, Treat: %c\n",
+                ++index, // Start with 1 ......
                 ptr->age,
                 ptr->sex,
                 ptr->hta,

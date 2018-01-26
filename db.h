@@ -6,8 +6,10 @@
 
 #include "dll.h"
 
-void db_init(person_t * p, int nr_persons);
+void db_init(person_t * p, int nr_persons, int min_age, int max_age);
 int db_query(int flags, const char *fmt, ...);
+// Another variant when running interactively
+dll_t * db_query_all(int flags, int * vals);
 void db_free();
 
 // Fancy interactive mode

@@ -1,5 +1,5 @@
 CC 				= gcc
-DEBUG 			= -DDEBUG_ENABLED
+#DEBUG 			= -DDEBUG_ENABLED
 CFLAGS 			= -Wall -Wextra -Wpedantic -g --std=c11 -fPIC ${DEBUG}
 CFLAGS_COMPILE 	= -c
 LDFLAGS			= 
@@ -43,10 +43,16 @@ ${BUILD}/randomize.o: randomize.c dll.c dll.h db.c db.h
 	${CC} ${CFLAGS} ${CFLAGS_COMPILE} $< -o $@
 	
 new: clean ${TXTS} ${BUILD} ${PROGRAM} run
+int: clean ${TXTS} ${BUILD} ${PROGRAM} with-db 
 
 run:
 	clear
 	./test
+
+with-db:
+	clear
+	./test -i
+
 clean:
 	rm -rf *~ ${PROGRAM} ${BUILD} ${TXTS}
 

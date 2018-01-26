@@ -21,25 +21,28 @@ void acknowledgments()
     printf("Developed by Carlos Pagola, January 2018, version 0.2\n");
 }
 
-void dump_statistics(int nr_persons)
+void dump_statistics(int nr_persons, int interactive)
 {
-    printf("\n*****************************************************************\n");
-    printf("Done! Elapsed time: %.3f seconds\n", time_get_sim_seconds());
-    printf("Statistics of examined patients\n");
-    printf("\nNumber of patients in the study:\t%d\n", nr_persons);
-    printf("\n*****************************************************************\n");
-
-/*
-    // Let's print some stats!
-    int patients_18 = db_query(AGE, "0", 18);
-    printf("Patients of age 18:\t%d (%.2f%%)\n",
-            patients_18, 100 * ((float)patients_18 / (float)nr_persons));
-    int patients_18_hta_yes = db_query(AGE | HTA, "02", 18, 'Y');
-    printf("Patients of age 18 with HTA positive:\t%d (%.2f%%)\n",
-            patients_18_hta_yes, 100 * ((float)patients_18_hta_yes / (float)patients_18));
-*/
-    // Enter interactive mode
-    db_interactive_mode();
+    if (interactive)
+    {
+        // Enter interactive mode
+        db_interactive_mode();
+    }
+    else
+    {
+        printf("\n*****************************************************************\n");
+        printf("Done! Elapsed time: %.3f seconds\n", time_get_sim_seconds());
+        printf("Statistics of examined patients\n");
+        printf("\nNumber of patients in the study:\t%d\n", nr_persons);
+        // Let's print some stats!
+        int patients_18 = db_query(AGE, "0", 18);
+        printf("Patients of age 18:\t\t\t%d (%.2f%%)\n",
+                patients_18, 100 * ((float)patients_18 / (float)nr_persons));
+        int patients_18_hta_yes = db_query(AGE | HTA, "02", 18, 'Y');
+        printf("Patients of age 18 with HTA positive:\t%d (%.2f%%)\n",
+                patients_18_hta_yes, 100 * ((float)patients_18_hta_yes / (float)patients_18));
+        printf("\n*****************************************************************\n");
+    }
 
 }
 
@@ -47,6 +50,7 @@ void help()
 {
     printf("USAGE: test nNM|v|h\n");
     printf("-h\tShow this help and exit\n");
+    printf("-i\tRun database search in interactive mode\n");
     printf("-n\tSet number of patients\n");
     printf("-m\tSet minimum age\n");
     printf("-M\tSet maximum age\n");
@@ -58,15 +62,19 @@ int main(int argc, char * argv[])
     int nr_persons = -1;
     int min_age = -1;
     int max_age = -1;
+    int interactive = 0; // Interactive mode
     int c;
 
-    while ((c = getopt(argc, argv, "m:M:n:hv")) != -1)
+    while ((c = getopt(argc, argv, "im:M:n:hv")) != -1)
     {
         switch (c)
         {
             case 'h':
                 help();
                 exit(0);
+            case 'i':
+                interactive = 1;
+                break;
             case 'v':
                 acknowledgments();
                 exit(0);
@@ -107,6 +115,12 @@ int main(int argc, char * argv[])
         printf("Enter age range (MAX): ");
         scanf("%d", &max_age);
     }
+    // Check that min < max
+    if (min_age > max_age)
+    {
+        fprintf(stderr, "Wrong range: min age must be smaller than max age!\n");
+        exit(2);
+    }
 
     subjects = (person_t *) malloc (sizeof *subjects * nr_persons);
 
@@ -125,9 +139,9 @@ int main(int argc, char * argv[])
         print_to_file(OUT_FILE, &subjects[i], i);
     }
     // Init db
-    db_init(subjects, nr_persons);
+    db_init(subjects, nr_persons, min_age, max_age);
     // Output some statistics
-    dump_statistics(nr_persons);
+    dump_statistics(nr_persons, interactive);
     // Free memory
     db_free();
     exit(0);
