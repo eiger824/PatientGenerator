@@ -10,12 +10,12 @@
 // Must-have macro for getline function
 #define _GNU_SOURCE
 
-#define NR_PARAMS   6
+#define NR_PARAMS   8
 
 static dll_t * db_list = NULL; // List to use as db
 static dll_t * tmp_list = NULL; // List to return to other file scopes
 
-static int params_to_search[NR_PARAMS] = {-1, -1, -1, -1, -1, -1};
+static int params_to_search[NR_PARAMS] = {-1, -1, -1, -1, -1, -1, -1, -1};
 static char * param_names[NR_PARAMS] =
 {
     "age",
@@ -23,6 +23,8 @@ static char * param_names[NR_PARAMS] =
     "hta",
     "hsa",
     "inc",
+    "rank",
+    "glasg",
     "treat"
 };
 
@@ -56,6 +58,8 @@ dll_t * db_query_all(int flags, int * vals)
     char hta = -1;
     char hsa = -1;
     char inc = -1;
+    char rank = -1;
+    int glasg = -1;
     char treat = -1;
 
     // See which args were passed onto the function
@@ -82,6 +86,12 @@ dll_t * db_query_all(int flags, int * vals)
                     inc = cval;
                     break;
                 case 5:
+                    rank = cval;
+                    break;
+                case 6:
+                    glasg = cval;
+                    break;
+                case 7:
                     treat = cval;
                     break;
                 default:
@@ -139,6 +149,20 @@ dll_t * db_query_all(int flags, int * vals)
         printf("Selected INC, count now:\t%d\n", tmp_list->count);
 #endif
     }
+    if ((flags & RANK) == RANK)
+    {
+        dll_select_all_from(tmp_list, RANK, rank);
+#ifdef DEBUG_ENABLED
+        printf("Selected RANK, count now:\t%d\n", tmp_list->count);
+#endif
+    }
+    if ((flags & GLASG) == GLASG)
+    {
+        dll_select_all_from(tmp_list, GLASG, glasg);
+#ifdef DEBUG_ENABLED
+        printf("Selected GLASG, count now:\t%d\n", tmp_list->count);
+#endif
+    }
     if ((flags & TREAT) == TREAT)
     {
         // Loop through list and remove all non-matches from tmp_list
@@ -158,6 +182,8 @@ int db_query(int flags, const char *fmt, ...)
     char hta = -1;
     char hsa = -1;
     char inc = -1;
+    char rank = -1;
+    int glasg = -1;
     char treat = -1;
 
     // Init variadic args
@@ -177,6 +203,10 @@ int db_query(int flags, const char *fmt, ...)
         else if (*fmt == '4')
             inc = va_arg(args, int);
         else if (*fmt == '5')
+            rank = va_arg(args, int);
+        else if (*fmt == '6')
+            glasg = va_arg(args, int);
+        else if (*fmt == '7')
             treat = va_arg(args, int);
         ++fmt;
     }
@@ -230,6 +260,20 @@ int db_query(int flags, const char *fmt, ...)
         printf("Selected INC, count now:\t%d\n", tmp_list->count);
 #endif
     }
+    if ((flags & RANK) == RANK)
+    {
+        dll_select_all_from(tmp_list, RANK, rank);
+#ifdef DEBUG_ENABLED
+        printf("Selected RANK, count now:\t%d\n", tmp_list->count);
+#endif
+    }
+    if ((flags & GLASG) == GLASG)
+    {
+        dll_select_all_from(tmp_list, GLASG, glasg);
+#ifdef DEBUG_ENABLED
+        printf("Selected GLASG, count now:\t%d\n", tmp_list->count);
+#endif
+    }
     if ((flags & TREAT) == TREAT)
     {
         // Loop through list and remove all non-matches from tmp_list
@@ -255,8 +299,8 @@ void db_help()
     printf("\nWelcome to the minimal patient database!\n");
     printf("\nPlease introduce your search queries in the following format:\n");
     printf("\n\t\t\tparam=key\n\n");
-    printf("List of available params:\tage,sex,hta,hsa,inc,treat\n");
-    printf("List of available keys:\t\t0,1,2,... (for age), M (for male), F (for female), Y (for YES), N (for NO)\n");
+    printf("List of available params:\tage,sex,hta,hsa,inc,rank,glasg,treat\n");
+    printf("List of available keys:\t\t0,1,2,... (for age), M (for male), F (for female), Y (for YES), N (for NO), L (for light), M (for moderate), S (for severe)\n");
     printf("List of available commands:\n");
     printf("\nexit/quit/end:\tTerminate database\n");
     printf("go:\t\tPerform the search - returns just the number of hits\n");
@@ -288,6 +332,7 @@ void db_interactive_mode()
 
     db_help();
 
+    printf("[db] ");
     while (( nread = getline(&line, &len, stdin)) != -1)
     {
         if (( retcode = db_parse_query(line)) == -1)
@@ -355,6 +400,30 @@ int db_parse_query(char * line)
                             strcat(print_buffer, (params_to_search[i] == 'Y' ? "positive, ":"negative, "));
                             break;
                         case 5:
+                            flags |= RANK;
+                            strcat(print_buffer, "with RANK ");
+                            strcat(print_buffer, (params_to_search[i] == 'Y' ? "positive, ":"negative, "));
+                            break;
+                        case 6:
+                            flags |= GLASG;
+                            strcat(print_buffer, "with GLASG ");
+                            switch (params_to_search[i])
+                            {
+                                case 'N':
+                                    strcat(print_buffer, " none, ");
+                                    break;
+                                case 'L':
+                                    strcat(print_buffer, " light, ");
+                                    break;
+                                case 'M':
+                                    strcat(print_buffer, " moderate, ");
+                                    break;
+                                case 'S':
+                                    strcat(print_buffer, " severe, ");
+                                    break;
+                            }
+                            break;
+                        case 7:
                             flags |= TREAT;
                             strcat(print_buffer, "with treatment ");
                             strcat(print_buffer, (params_to_search[i] == 'A' ? "A, ":"B, "));
@@ -538,7 +607,7 @@ int db_parse_query(char * line)
                                             "[db] Param value '%c' is illegal. Possible values: M,F. Try again\n", a);
                                 }
                             }
-                            else if (i >= 2 && i <= 4)
+                            else if (i >= 2 && i <= 5)
                             {
                                 if (a == 'Y' || a == 'N')
                                 {
@@ -549,6 +618,19 @@ int db_parse_query(char * line)
                                 {
                                     fprintf(stderr,
                                             "[db] Param value '%c' is illegal. Possible values: Y,N. Try again\n", a);
+                                }
+                            }
+                            else if (i == 6) // Three types: N, L, M, S
+                            {
+                                if (a == 'N' || a == 'L' || a == 'M' || a == 'S')
+                                {
+                                    params_to_search[i] = a;
+                                    nr++;
+                                }
+                                else
+                                {
+                                    fprintf(stderr,
+                                            "[db] Param value '%c' is illegal. Possible values: N,L,M,S. Try again\n", a);
                                 }
                             }
                             else

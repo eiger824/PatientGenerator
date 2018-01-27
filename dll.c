@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "dll.h"
 
@@ -131,16 +132,34 @@ void dll_print(dll_t *dlls)
 {
     // Print a side index - easier to read
     unsigned index = 0;
+    char glasgow_type[100];
     dll_node_t * node = dlls->first;
     while (node != dlls->last->next)
     {
         person_t * ptr = node->p;
-        printf("%d)\tAge: %d, Sex: %c, HTA: %c, HSA: %c, Inc: %c, Treat: %c\n",
+        switch (ptr->glasg)
+        {
+            case NONE:
+                strcpy(glasgow_type, "--");
+                break;
+            case LIGHT:
+                strcpy(glasgow_type, "Light");
+                break;
+            case MODERATE:
+                strcpy(glasgow_type, "Moderate");
+                break;
+            case SEVERE:
+                strcpy(glasgow_type, "Severe");
+                break;
+        }
+        printf("%d)\tAge: %d, Sex: %c, HTA: %c, HSA: %c, Rankin: %c, Glasgow: %s, Inc: %c, Treat: %c\n",
                 ++index, // Start with 1 ......
                 ptr->age,
                 ptr->sex,
                 ptr->hta,
                 ptr->hsa,
+                ptr->rank,
+                glasgow_type,
                 ptr->inc,
                 ptr->treat);
         node = node->next;
@@ -185,6 +204,12 @@ void dll_select_all_from(dll_t * list, param_t param, int val)
                 break;
             case INC:
                 which = nd->p->inc;
+                break;
+            case RANK:
+                which = nd->p->rank;
+                break;
+            case GLASG:
+                which = (int)nd->p->glasg;
                 break;
             case TREAT:
                 which = nd->p->treat;
