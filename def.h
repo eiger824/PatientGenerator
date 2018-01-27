@@ -9,6 +9,7 @@
 #define		HSA_FILE		    "txts/hsa.txt"
 #define     RANK_FILE           "txts/rankin.txt"
 #define     GLASG_FILE          "txts/glasgow.txt"
+#define     WFNS_FILE           "txts/wfns.txt"
 #define		INC_FILE		    "txts/incid.txt"
 #define 	TREATMENT_FILE		"txts/treatment.txt"
 
@@ -21,7 +22,8 @@ typedef enum param_type
     INC     = 0x00000010,
     RANK    = 0x00000020,
     GLASG   = 0x00000040,
-    TREAT   = 0x00000080,
+    WFNS    = 0x00000080,
+    TREAT   = 0x00000100,
 } param_t;
 
 #endif /* DEF_H_ */

@@ -137,9 +137,14 @@ int main(int argc, char * argv[])
         subjects[i].rank = (rand() < RAND_MAX / 2) ? 'Y' : 'N';
         // depending on hsa, which glasgow level
         if (subjects[i].hsa == 'Y')
+        {
+
             subjects[i].glasg = (gtype_t) (1 + rand() % 3);
+        }
         else
+        {
             subjects[i].glasg = NONE;
+        }
         subjects[i].treat = (rand() < RAND_MAX / 2) ? 'A' : 'B';
         // Print the whole person entry
         print_to_file(OUT_FILE, &subjects[i], i);
