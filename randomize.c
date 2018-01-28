@@ -133,16 +133,17 @@ int main(int argc, char * argv[])
         subjects[i].sex = (rand() < RAND_MAX / 2) ? 'M' : 'F';
         subjects[i].hta = (rand() < RAND_MAX / 2) ? 'Y' : 'N';
         subjects[i].hsa = (rand() < RAND_MAX / 2) ? 'Y' : 'N';
-        subjects[i].inc = (rand() < RAND_MAX / 2) ? 'Y' : 'N';
         // depending on hsa, which glasgow level
         if (subjects[i].hsa == 'Y')
         {
+            subjects[i].inc = 'N';
             subjects[i].fisher = FISHER_MIN + rand() % (FISHER_MAX + 1 - FISHER_MIN);
             subjects[i].glasg = (gtype_t) (GLASG_MIN + rand() % (GLASG_MAX + 1 - GLASG_MIN));
             subjects[i].wfns = WFNS_MIN + rand() % (WFNS_MAX + 1 - WFNS_MIN);
         }
         else
         {
+            subjects[i].inc = 'Y';
             subjects[i].fisher = '-';
             subjects[i].glasg = NONE;
             subjects[i].wfns = '-';
