@@ -106,10 +106,13 @@ dll_t * db_query_all(int flags, int * vals)
         }
     }
 
+    // Free before making a new copy
     if (tmp_list)
-        free(tmp_list);
+        dll_destroy(tmp_list);
+
     // Init list by copy
     tmp_list =  dll_copy_list(db_list);
+
 #ifdef DEBUG_ENABLED
     printf("Initial count:\t%d\n", tmp_list->count);
 #endif
@@ -226,9 +229,11 @@ int db_query(int flags, const char *fmt, ...)
             treat = va_arg(args, int);
         ++fmt;
     }
+    // Free list
+    va_end(args);
 
     if (tmp_list)
-        free(tmp_list);
+        dll_destroy(tmp_list);
     // Init list by copy
     tmp_list =  dll_copy_list(db_list);
 #ifdef DEBUG_ENABLED
@@ -311,9 +316,8 @@ int db_query(int flags, const char *fmt, ...)
 
 void db_free()
 {
-    // Do nothing for the moment
-    free(db_list);
-    free(tmp_list);
+    dll_destroy(db_list);
+    dll_destroy(tmp_list);
 }
 
 

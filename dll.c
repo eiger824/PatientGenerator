@@ -109,7 +109,6 @@ void dll_delete(dll_t *dlls, dll_node_t *node)
 	{
 		node->next->prev = node->prev;
 	}
-//     free(node->p);
 	free(node);
 	dlls->count--;
 }
@@ -117,15 +116,15 @@ void dll_delete(dll_t *dlls, dll_node_t *node)
 void dll_empty(dll_t *dlls)
 {
 	dll_node_t *temp_first_node;
-	while(dlls->first != NULL)
+    while (dlls->first != NULL)
 	{
 		temp_first_node = dlls->first;
 		dlls->first = dlls->first->next;
-        free(temp_first_node->p);
 		free(temp_first_node);
 	}
 	dlls->count = 0;
 	dlls->last = NULL;
+    dlls->first = NULL;
 }
 
 void dll_print(dll_t *dlls)
