@@ -10,6 +10,7 @@ TXTS			= txts
 PROGRAM 		= test
 OBJS 			= ${BUILD}/dll.o \
 				  ${BUILD}/db.o \
+				  ${BUILD}/utils.o \
 				  ${BUILD}/timelib.o \
 				  ${BUILD}/files.o \
 				  ${BUILD}/randomize.o
@@ -31,6 +32,9 @@ ${BUILD}/dll.o: dll.c dll.h
 	${CC} ${CFLAGS} ${CFLAGS_COMPILE} $< -o $@
 
 ${BUILD}/db.o: db.c db.h
+	${CC} ${CFLAGS} ${CFLAGS_COMPILE} $< -o $@
+
+${BUILD}/utils.o: utils.c utils.h
 	${CC} ${CFLAGS} ${CFLAGS_COMPILE} $< -o $@
 
 ${BUILD}/files.o: files.c files.h
