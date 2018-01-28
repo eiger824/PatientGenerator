@@ -140,19 +140,19 @@ void dll_print(dll_t *dlls)
         switch (ptr->glasg)
         {
             case NONE:
-                strcpy(glasgow_type, "--");
+                strcpy(glasgow_type, "--      ");
                 break;
             case LIGHT:
-                strcpy(glasgow_type, "Light");
+                strcpy(glasgow_type, "Light   ");
                 break;
             case MODERATE:
                 strcpy(glasgow_type, "Moderate");
                 break;
             case SEVERE:
-                strcpy(glasgow_type, "Severe");
+                strcpy(glasgow_type, "Severe  ");
                 break;
         }
-        printf("%d)\tAge: %d, Sex: %c, HTA: %c, HSA: %c, Rankin: %c, Glasgow: %s, Inc: %c, Treat: %c\n",
+        printf("%d)\tAge: %d, Sex: %c, HTA: %c, HSA: %c, Rankin: %c, Glasgow: %s, WFNS: %c, Inc: %c, Treat: %c\n",
                 ++index, // Start with 1 ......
                 ptr->age,
                 ptr->sex,
@@ -160,6 +160,7 @@ void dll_print(dll_t *dlls)
                 ptr->hsa,
                 ptr->rank,
                 glasgow_type,
+                (ptr->wfns == '-' ? ptr->wfns : ptr->wfns + 48),
                 ptr->inc,
                 ptr->treat);
         node = node->next;
@@ -210,6 +211,9 @@ void dll_select_all_from(dll_t * list, param_t param, int val)
                 break;
             case GLASG:
                 which = (int)nd->p->glasg;
+                break;
+            case WFNS:
+                which = nd->p->wfns;
                 break;
             case TREAT:
                 which = nd->p->treat;

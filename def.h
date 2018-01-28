@@ -13,6 +13,13 @@
 #define		INC_FILE		    "txts/incid.txt"
 #define 	TREATMENT_FILE		"txts/treatment.txt"
 
+// Some constants
+#define     GLASG_MIN           1
+#define     GLASG_MAX           3
+
+#define     WFNS_MIN            1
+#define     WFNS_MAX            5
+
 typedef enum param_type
 {
     AGE     = 0x00000001,

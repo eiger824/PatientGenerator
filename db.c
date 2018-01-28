@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <stdint.h>
 
 #include "db.h"
 #include "def.h"
@@ -10,12 +11,12 @@
 // Must-have macro for getline function
 #define _GNU_SOURCE
 
-#define NR_PARAMS   8
+#define NR_PARAMS   9
 
 static dll_t * db_list = NULL; // List to use as db
 static dll_t * tmp_list = NULL; // List to return to other file scopes
 
-static int params_to_search[NR_PARAMS] = {-1, -1, -1, -1, -1, -1, -1, -1};
+static int params_to_search[NR_PARAMS] = {-1, -1, -1, -1, -1, -1, -1, -1, -1};
 static char * param_names[NR_PARAMS] =
 {
     "age",
@@ -25,6 +26,7 @@ static char * param_names[NR_PARAMS] =
     "inc",
     "rank",
     "glasg",
+    "wfns",
     "treat"
 };
 
@@ -53,14 +55,15 @@ void db_init(person_t * p, int nr_persons, int min_age, int max_age)
 
 dll_t * db_query_all(int flags, int * vals)
 {
-    int age = -1;
-    char sex = -1;
-    char hta = -1;
-    char hsa = -1;
-    char inc = -1;
-    char rank = -1;
+    uint8_t age = -1;
+    int8_t sex = -1;
+    int8_t hta = -1;
+    int8_t hsa = -1;
+    int8_t inc = -1;
+    int8_t rank = -1;
     int glasg = -1;
-    char treat = -1;
+    int8_t wfns = -1;
+    int8_t treat = -1;
 
     // See which args were passed onto the function
     for (unsigned i=0; i<NR_PARAMS; ++i)
@@ -92,6 +95,9 @@ dll_t * db_query_all(int flags, int * vals)
                     glasg = cval;
                     break;
                 case 7:
+                    wfns = cval;
+                    break;
+                case 8:
                     treat = cval;
                     break;
                 default:
@@ -163,6 +169,13 @@ dll_t * db_query_all(int flags, int * vals)
         printf("Selected GLASG, count now:\t%d\n", tmp_list->count);
 #endif
     }
+    if ((flags & WFNS) == WFNS)
+    {
+        dll_select_all_from(tmp_list, WFNS, wfns);
+#ifdef DEBUG_ENABLED
+        printf("Selected WFNS, count now:\t%d\n", tmp_list->count);
+#endif
+    }
     if ((flags & TREAT) == TREAT)
     {
         // Loop through list and remove all non-matches from tmp_list
@@ -177,14 +190,15 @@ dll_t * db_query_all(int flags, int * vals)
 
 int db_query(int flags, const char *fmt, ...)
 {
-    int age = -1;
-    char sex = -1;
-    char hta = -1;
-    char hsa = -1;
-    char inc = -1;
-    char rank = -1;
+    uint8_t age = -1;
+    int8_t sex = -1;
+    int8_t hta = -1;
+    int8_t hsa = -1;
+    int8_t inc = -1;
+    int8_t rank = -1;
     int glasg = -1;
-    char treat = -1;
+    int8_t wfns = -1;
+    int8_t treat = -1;
 
     // Init variadic args
     va_list args;
@@ -207,6 +221,8 @@ int db_query(int flags, const char *fmt, ...)
         else if (*fmt == '6')
             glasg = va_arg(args, int);
         else if (*fmt == '7')
+            wfns = va_arg(args, int);
+        else if (*fmt == '8')
             treat = va_arg(args, int);
         ++fmt;
     }
@@ -274,6 +290,13 @@ int db_query(int flags, const char *fmt, ...)
         printf("Selected GLASG, count now:\t%d\n", tmp_list->count);
 #endif
     }
+    if ((flags & WFNS) == WFNS)
+    {
+        dll_select_all_from(tmp_list, WFNS, wfns);
+#ifdef DEBUG_ENABLED
+        printf("Selected WFNS, count now:\t%d\n", tmp_list->count);
+#endif
+    }
     if ((flags & TREAT) == TREAT)
     {
         // Loop through list and remove all non-matches from tmp_list
@@ -299,7 +322,7 @@ void db_help()
     printf("\nWelcome to the minimal patient database!\n");
     printf("\nPlease introduce your search queries in the following format:\n");
     printf("\n\t\t\tparam=key\n\n");
-    printf("List of available params:\tage,sex,hta,hsa,inc,rank,glasg,treat\n");
+    printf("List of available params:\tage,sex,hta,hsa,inc,rank,glasg,wfns,treat\n");
     printf("List of available keys:\t\t0,1,2,... (for age), M (for male), F (for female), Y (for YES), N (for NO), L (for light), M (for moderate), S (for severe)\n");
     printf("List of available commands:\n");
     printf("\nexit/quit/end:\tTerminate database\n");
@@ -424,6 +447,13 @@ int db_parse_query(char * line)
                             }
                             break;
                         case 7:
+                            flags |= WFNS;
+                            strcat(print_buffer, "with WFNS ");
+                            char wfns[10];
+                            sprintf(wfns, "%d, ", params_to_search[i]);
+                            strcat(print_buffer, wfns);
+                            break;
+                        case 8:
                             flags |= TREAT;
                             strcat(print_buffer, "with treatment ");
                             strcat(print_buffer, (params_to_search[i] == 'A' ? "A, ":"B, "));
@@ -575,20 +605,37 @@ int db_parse_query(char * line)
                     // Check if available
                     if (params_to_search[i] == -1)
                     {
-                        if (i == 0)
+                        if (i == 0 || i == 7)
                         {
                             // Check input range
                             int a = atoi(++delim);
-                            if (a < db_min_age || a > db_max_age)
+                            if (i == 0)
                             {
-                                fprintf(stderr,
-                                        "[db] Param value \"%d\" is out of range [%d-%d]. Try again!\n",
-                                        a, db_min_age, db_max_age);
+                                if (a < db_min_age || a > db_max_age)
+                                {
+                                    fprintf(stderr,
+                                            "[db] Param value \"%d\" is out of range [%d-%d]. Try again!\n",
+                                            a, db_min_age, db_max_age);
+                                }
+                                else
+                                {
+                                    params_to_search[i] = a;
+                                    nr++;
+                                }
                             }
                             else
                             {
-                                params_to_search[i] = a;
-                                nr++;
+                                if (a < WFNS_MIN || a > WFNS_MAX)
+                                {
+                                    fprintf(stderr,
+                                            "[db] Param value \"%d\" is out of range [%d-%d]. Try again!\n",
+                                            a, WFNS_MIN, WFNS_MAX);
+                                }
+                                else
+                                {
+                                    params_to_search[i] = a;
+                                    nr++;
+                                }
                             }
                         }
                         else

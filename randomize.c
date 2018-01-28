@@ -138,12 +138,13 @@ int main(int argc, char * argv[])
         // depending on hsa, which glasgow level
         if (subjects[i].hsa == 'Y')
         {
-
-            subjects[i].glasg = (gtype_t) (1 + rand() % 3);
+            subjects[i].glasg = (gtype_t) (GLASG_MIN + rand() % (GLASG_MAX + 1 - GLASG_MIN));
+            subjects[i].wfns = WFNS_MIN + rand() % (WFNS_MAX + 1 - WFNS_MIN);
         }
         else
         {
             subjects[i].glasg = NONE;
+            subjects[i].wfns = '-';
         }
         subjects[i].treat = (rand() < RAND_MAX / 2) ? 'A' : 'B';
         // Print the whole person entry

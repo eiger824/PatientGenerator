@@ -30,6 +30,9 @@ int print_separate_file(param_t p, int val)
         case GLASG:
             strcpy(fname, GLASG_FILE);
             break;
+        case WFNS:
+            strcpy(fname, WFNS_FILE);
+            break;
         case TREAT:
             strcpy(fname, TREATMENT_FILE);
             break;
@@ -43,7 +46,7 @@ int print_separate_file(param_t p, int val)
         perror("Error opening file");
         return -1;
     }
-    if (p == AGE)
+    if (p == AGE || p == WFNS)
     {
         fprintf(fp, "%d\n", val);
     }
@@ -88,9 +91,9 @@ int print_to_file(const char *fname, const person_t * ptr, unsigned index)
     // New write
     if (ptr == NULL)
     {
-        fprintf(f, "Patient\t\tAge\t\tSex\t\tHTA\t\tHSA\t\tRankin\t\tGlasgow\t\tIncident\t\tTreat\n");
-        fprintf(f, "-----------------------------------------------");
-        fprintf(f, "-----------------------------------------------\n");
+        fprintf(f, "Patient\tAge\tSex\tHTA\tHSA\tIncident Rankin\tGlasgow\t\tWFNS\tTreat\n");
+        fprintf(f, "-------------------------------------------");
+        fprintf(f, "-------------------------------------------\n");
     }
     else
     {
@@ -110,7 +113,7 @@ int print_to_file(const char *fname, const person_t * ptr, unsigned index)
                 strcpy(glasgow_type, " Severe ");
                 break;
         }
-        fprintf(f, "%d\t\t\t%d\t\t%c\t\t%c\t\t%c\t\t%c\t\t\t%c\t\t\t%s\t\t%c\n",
+        fprintf(f, "%d\t%d\t%c\t%c\t%c\t%c\t %c\t%s\t%c\t%c\n",
                 index + 1,
                 ptr->age,
                 ptr->sex,
@@ -119,9 +122,10 @@ int print_to_file(const char *fname, const person_t * ptr, unsigned index)
                 ptr->inc,
                 ptr->rank,
                 glasgow_type,
+                (ptr->wfns == '-' ? ptr->wfns : ptr->wfns + 48),
                 ptr->treat);
-        fprintf(f, "-----------------------------------------------");
-        fprintf(f, "-----------------------------------------------\n");
+        fprintf(f, "-------------------------------------------");
+        fprintf(f, "-------------------------------------------\n");
 
         // Print individual files
         print_separate_file(AGE, ptr->age);
@@ -131,6 +135,7 @@ int print_to_file(const char *fname, const person_t * ptr, unsigned index)
         print_separate_file(INC, ptr->inc);
         print_separate_file(RANK, ptr->rank);
         print_separate_file(GLASG, ptr->glasg);
+        print_separate_file(WFNS, ptr->wfns);
         print_separate_file(TREAT, ptr->treat);
     }
     // And close it
