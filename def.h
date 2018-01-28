@@ -7,7 +7,7 @@
 #define		SEXES_FILE		    "txts/sexes.txt"
 #define 	HTA_FILE		    "txts/hta.txt"
 #define		HSA_FILE		    "txts/hsa.txt"
-#define     RANK_FILE           "txts/rankin.txt"
+#define     FISHER_FILE         "txts/fisher.txt"
 #define     GLASG_FILE          "txts/glasgow.txt"
 #define     WFNS_FILE           "txts/wfns.txt"
 #define		INC_FILE		    "txts/incid.txt"
@@ -20,6 +20,9 @@
 #define     WFNS_MIN            1
 #define     WFNS_MAX            5
 
+#define     FISHER_MIN          1
+#define     FISHER_MAX          4
+
 typedef enum param_type
 {
     AGE     = 0x00000001,
@@ -27,7 +30,7 @@ typedef enum param_type
     HTA     = 0x00000004,
     HSA     = 0x00000008,
     INC     = 0x00000010,
-    RANK    = 0x00000020,
+    FISHER  = 0x00000020,
     GLASG   = 0x00000040,
     WFNS    = 0x00000080,
     TREAT   = 0x00000100,

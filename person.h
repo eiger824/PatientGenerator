@@ -18,7 +18,7 @@ typedef struct person_type
     int8_t hta;
     int8_t hsa;
     int8_t inc;
-    int8_t rank;
+    int8_t fisher;
     gtype_t glasg;
     int8_t wfns;
     int8_t treat;

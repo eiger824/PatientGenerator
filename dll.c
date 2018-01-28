@@ -130,6 +130,8 @@ void dll_empty(dll_t *dlls)
 
 void dll_print(dll_t *dlls)
 {
+    // Do stuff if something in the list
+    if (!dlls->count) return;
     // Print a side index - easier to read
     unsigned index = 0;
     char glasgow_type[100];
@@ -152,13 +154,13 @@ void dll_print(dll_t *dlls)
                 strcpy(glasgow_type, "Severe  ");
                 break;
         }
-        printf("%d)\tAge: %d, Sex: %c, HTA: %c, HSA: %c, Rankin: %c, Glasgow: %s, WFNS: %c, Inc: %c, Treat: %c\n",
+        printf("%d)\tAge: %d, Sex: %c, HTA: %c, HSA: %c, Fisher: %c, Glasgow: %s, WFNS: %c, Inc: %c, Treat: %c\n",
                 ++index, // Start with 1 ......
                 ptr->age,
                 ptr->sex,
                 ptr->hta,
                 ptr->hsa,
-                ptr->rank,
+                (ptr->fisher == '-' ? ptr->fisher : ptr->fisher + 48),
                 glasgow_type,
                 (ptr->wfns == '-' ? ptr->wfns : ptr->wfns + 48),
                 ptr->inc,
@@ -206,8 +208,8 @@ void dll_select_all_from(dll_t * list, param_t param, int val)
             case INC:
                 which = nd->p->inc;
                 break;
-            case RANK:
-                which = nd->p->rank;
+            case FISHER:
+                which = nd->p->fisher;
                 break;
             case GLASG:
                 which = (int)nd->p->glasg;

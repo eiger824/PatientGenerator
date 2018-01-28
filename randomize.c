@@ -18,7 +18,7 @@ static person_t *subjects;
 
 void acknowledgments()
 {
-    printf("Developed by Carlos Pagola, January 2018, version 0.2\n");
+    printf("Developed by Carlos Pagola, January 2018, version 0.3\n");
 }
 
 void dump_statistics(int nr_persons, int interactive)
@@ -134,15 +134,16 @@ int main(int argc, char * argv[])
         subjects[i].hta = (rand() < RAND_MAX / 2) ? 'Y' : 'N';
         subjects[i].hsa = (rand() < RAND_MAX / 2) ? 'Y' : 'N';
         subjects[i].inc = (rand() < RAND_MAX / 2) ? 'Y' : 'N';
-        subjects[i].rank = (rand() < RAND_MAX / 2) ? 'Y' : 'N';
         // depending on hsa, which glasgow level
         if (subjects[i].hsa == 'Y')
         {
+            subjects[i].fisher = FISHER_MIN + rand() % (FISHER_MAX + 1 - FISHER_MIN);
             subjects[i].glasg = (gtype_t) (GLASG_MIN + rand() % (GLASG_MAX + 1 - GLASG_MIN));
             subjects[i].wfns = WFNS_MIN + rand() % (WFNS_MAX + 1 - WFNS_MIN);
         }
         else
         {
+            subjects[i].fisher = '-';
             subjects[i].glasg = NONE;
             subjects[i].wfns = '-';
         }

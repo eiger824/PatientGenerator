@@ -24,7 +24,7 @@ static char * param_names[NR_PARAMS] =
     "hta",
     "hsa",
     "inc",
-    "rank",
+    "fisher",
     "glasg",
     "wfns",
     "treat"
@@ -60,7 +60,7 @@ dll_t * db_query_all(int flags, int * vals)
     int8_t hta = -1;
     int8_t hsa = -1;
     int8_t inc = -1;
-    int8_t rank = -1;
+    int8_t fisher = -1;
     int glasg = -1;
     int8_t wfns = -1;
     int8_t treat = -1;
@@ -89,7 +89,7 @@ dll_t * db_query_all(int flags, int * vals)
                     inc = cval;
                     break;
                 case 5:
-                    rank = cval;
+                    fisher = cval;
                     break;
                 case 6:
                     glasg = cval;
@@ -155,11 +155,11 @@ dll_t * db_query_all(int flags, int * vals)
         printf("Selected INC, count now:\t%d\n", tmp_list->count);
 #endif
     }
-    if ((flags & RANK) == RANK)
+    if ((flags & FISHER) == FISHER)
     {
-        dll_select_all_from(tmp_list, RANK, rank);
+        dll_select_all_from(tmp_list, FISHER, fisher);
 #ifdef DEBUG_ENABLED
-        printf("Selected RANK, count now:\t%d\n", tmp_list->count);
+        printf("Selected FISHER, count now:\t%d\n", tmp_list->count);
 #endif
     }
     if ((flags & GLASG) == GLASG)
@@ -195,7 +195,7 @@ int db_query(int flags, const char *fmt, ...)
     int8_t hta = -1;
     int8_t hsa = -1;
     int8_t inc = -1;
-    int8_t rank = -1;
+    int8_t fisher = -1;
     int glasg = -1;
     int8_t wfns = -1;
     int8_t treat = -1;
@@ -217,7 +217,7 @@ int db_query(int flags, const char *fmt, ...)
         else if (*fmt == '4')
             inc = va_arg(args, int);
         else if (*fmt == '5')
-            rank = va_arg(args, int);
+            fisher = va_arg(args, int);
         else if (*fmt == '6')
             glasg = va_arg(args, int);
         else if (*fmt == '7')
@@ -276,11 +276,11 @@ int db_query(int flags, const char *fmt, ...)
         printf("Selected INC, count now:\t%d\n", tmp_list->count);
 #endif
     }
-    if ((flags & RANK) == RANK)
+    if ((flags & FISHER) == FISHER)
     {
-        dll_select_all_from(tmp_list, RANK, rank);
+        dll_select_all_from(tmp_list, FISHER, fisher);
 #ifdef DEBUG_ENABLED
-        printf("Selected RANK, count now:\t%d\n", tmp_list->count);
+        printf("Selected FISHER, count now:\t%d\n", tmp_list->count);
 #endif
     }
     if ((flags & GLASG) == GLASG)
@@ -322,7 +322,7 @@ void db_help()
     printf("\nWelcome to the minimal patient database!\n");
     printf("\nPlease introduce your search queries in the following format:\n");
     printf("\n\t\t\tparam=key\n\n");
-    printf("List of available params:\tage,sex,hta,hsa,inc,rank,glasg,wfns,treat\n");
+    printf("List of available params:\tage,sex,hta,hsa,inc,fisher,glasg,wfns,treat\n");
     printf("List of available keys:\t\t0,1,2,... (for age), M (for male), F (for female), Y (for YES), N (for NO), L (for light), M (for moderate), S (for severe)\n");
     printf("List of available commands:\n");
     printf("\nexit/quit/end:\tTerminate database\n");
@@ -423,9 +423,11 @@ int db_parse_query(char * line)
                             strcat(print_buffer, (params_to_search[i] == 'Y' ? "positive, ":"negative, "));
                             break;
                         case 5:
-                            flags |= RANK;
-                            strcat(print_buffer, "with RANK ");
-                            strcat(print_buffer, (params_to_search[i] == 'Y' ? "positive, ":"negative, "));
+                            flags |= FISHER;
+                            strcat(print_buffer, "with FISHER ");
+                            char fish[10];
+                            sprintf(fish, "%d, ", params_to_search[i]);
+                            strcat(print_buffer, fish);
                             break;
                         case 6:
                             flags |= GLASG;
@@ -605,7 +607,7 @@ int db_parse_query(char * line)
                     // Check if available
                     if (params_to_search[i] == -1)
                     {
-                        if (i == 0 || i == 7)
+                        if (i == 0 || i == 7 || i == 5)
                         {
                             // Check input range
                             int a = atoi(++delim);
@@ -623,13 +625,27 @@ int db_parse_query(char * line)
                                     nr++;
                                 }
                             }
-                            else
+                            else if (i == 7)
                             {
                                 if (a < WFNS_MIN || a > WFNS_MAX)
                                 {
                                     fprintf(stderr,
                                             "[db] Param value \"%d\" is out of range [%d-%d]. Try again!\n",
                                             a, WFNS_MIN, WFNS_MAX);
+                                }
+                                else
+                                {
+                                    params_to_search[i] = a;
+                                    nr++;
+                                }
+                            }
+                            else
+                            {
+                                if (a < FISHER_MIN || a > FISHER_MAX)
+                                {
+                                    fprintf(stderr,
+                                            "[db] Param value \"%d\" is out of range [%d-%d]. Try again!\n",
+                                            a, FISHER_MIN, FISHER_MAX);
                                 }
                                 else
                                 {
