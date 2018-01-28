@@ -46,9 +46,13 @@ int print_separate_file(param_t p, int val)
         perror("Error opening file");
         return -1;
     }
-    if (p == AGE || p == WFNS)
+    if (p == AGE)
     {
         fprintf(fp, "%d\n", val);
+    }
+    else if (p == WFNS)
+    {
+        fprintf(fp, "%c\n", (val == '-' ? val : val + 48));
     }
     else if (p == GLASG)
     {
