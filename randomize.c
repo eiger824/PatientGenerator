@@ -59,6 +59,7 @@ void help()
 
 int main(int argc, char * argv[])
 {
+    printf("%zu\n", sizeof(person_t));
     int nr_persons = -1;
     int min_age = -1;
     int max_age = -1;

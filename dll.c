@@ -124,7 +124,7 @@ void dll_empty(dll_t *dlls)
 	}
 	dlls->count = 0;
 	dlls->last = NULL;
-    dlls->first = NULL;
+//     dlls->first = NULL;
 }
 
 void dll_print(dll_t *dlls)

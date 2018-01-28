@@ -45,6 +45,7 @@ void db_init(person_t * p, int nr_persons, int min_age, int max_age)
     {
         dll_insert_end(db_list, q++);
     }
+    free(p);
 #ifdef DEBUG_ENABLED
     dll_print(db_list);
 #endif
@@ -232,10 +233,13 @@ int db_query(int flags, const char *fmt, ...)
     // Free list
     va_end(args);
 
+    // Free before making a new copy
     if (tmp_list)
         dll_destroy(tmp_list);
+
     // Init list by copy
     tmp_list =  dll_copy_list(db_list);
+
 #ifdef DEBUG_ENABLED
     printf("Initial count:\t%d\n", tmp_list->count);
 #endif
@@ -317,7 +321,9 @@ int db_query(int flags, const char *fmt, ...)
 void db_free()
 {
     dll_destroy(db_list);
-    dll_destroy(tmp_list);
+    // Free this list if any queries were made
+    if (tmp_list)
+        dll_destroy(tmp_list);
 }
 
 
@@ -368,6 +374,7 @@ void db_interactive_mode()
     }
     // Free line
     free(line);
+    printf("Here!\n");
 }
 
 int db_parse_query(char * line)
