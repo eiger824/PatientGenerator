@@ -7,7 +7,7 @@ LDFLAGS			=
 BUILD 			= build
 TXTS			= txts
 
-PROGRAM 		= test
+PROGRAM 		= patient-generator 
 OBJS 			= ${BUILD}/dll.o \
 				  ${BUILD}/db.o \
 				  ${BUILD}/utils.o \
@@ -23,7 +23,7 @@ ${TXTS}:
 ${BUILD}:
 	test -d ${BUILD} || mkdir ${BUILD} 
 
-test: ${OBJS} 
+${PROGRAM}: ${OBJS} 
 	${CC} ${CFLAGS} $^ ${LDFLAGS} -o ${BUILD}/$@
 	rm -f ${PROGRAM}
 	ln -s ${BUILD}/$@ ${PROGRAM}

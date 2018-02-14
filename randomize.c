@@ -18,7 +18,7 @@ static person_t *subjects;
 
 void acknowledgments()
 {
-    printf("Developed by Carlos Pagola, January 2018, version 0.3\n");
+    printf("Developed by Carlos Pagola, January 2018, version 0.4\n");
 }
 
 void dump_statistics(int nr_persons, int interactive)
@@ -32,16 +32,8 @@ void dump_statistics(int nr_persons, int interactive)
     {
         printf("\n*****************************************************************\n");
         printf("Done! Elapsed time: %.3f seconds\n", time_get_sim_seconds());
-        printf("Statistics of examined patients\n");
-        printf("\nNumber of patients in the study:\t%d\n", nr_persons);
-        // Let's print some stats!
-        int patients_18 = db_query(AGE, "0", 18);
-        printf("Patients of age 18:\t\t\t%d (%.2f%%)\n",
-                patients_18, 100 * ((float)patients_18 / (float)nr_persons));
-        int patients_18_hta_yes = db_query(AGE | HTA, "02", 18, 'Y');
-        printf("Patients of age 18 with HTA positive:\t%d (%.2f%%)\n",
-                patients_18_hta_yes, 100 * ((float)patients_18_hta_yes / (float)patients_18));
-        printf("\n*****************************************************************\n");
+        printf("(See all files under txts/ directory)\n");
+        printf("*****************************************************************\n");
     }
 
 }
