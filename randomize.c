@@ -3,6 +3,7 @@
 #include <string.h>
 #include <time.h>
 #include <sys/time.h>
+#include <libgen.h>
 #include <getopt.h>
 
 #include "person.h"
@@ -31,27 +32,35 @@ void dump_statistics(int nr_persons, int interactive)
     else
     {
         printf("\n*****************************************************************\n");
-        printf("Done! Elapsed time: %.3f seconds\n", time_get_sim_seconds());
+        printf("Done! %d patients were generated in %.3f seconds\n",
+                nr_persons, time_get_sim_seconds());
         printf("(See all files under txts/ directory)\n");
         printf("*****************************************************************\n");
     }
 
 }
 
-void help()
+void help(char * program)
 {
-    printf("USAGE: test nNM|v|h\n");
+    printf("USAGE: %s nNM|v|h\n", basename(program));
     printf("-h\tShow this help and exit\n");
     printf("-i\tRun database search in interactive mode\n");
     printf("-n\tSet number of patients\n");
     printf("-m\tSet minimum age\n");
     printf("-M\tSet maximum age\n");
     printf("-v\tShow version information and exit\n");
+    printf("\nEXAMPLES:\n");
+    printf("%s\t\t\tRun the tool and exit after generation. Patient data will be asked to the user\n",
+            basename(program));
+    printf("%s -i\t\t\tRun the tool and enter interactive database mode after generation. Patient data will be asked to the user\n",
+            basename(program));
+    printf("%s -n 100 -m 18 -M 90\tRun the tool by specifying number of patients and age range\n",
+            basename(program));
+
 }
 
 int main(int argc, char * argv[])
 {
-    printf("%zu\n", sizeof(person_t));
     int nr_persons = -1;
     int min_age = -1;
     int max_age = -1;
@@ -63,7 +72,7 @@ int main(int argc, char * argv[])
         switch (c)
         {
             case 'h':
-                help();
+                help(argv[0]);
                 exit(0);
             case 'i':
                 interactive = 1;
