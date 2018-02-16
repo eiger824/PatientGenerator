@@ -36,6 +36,7 @@ Then, the program shall be run like:
 * -n
 * -v
 
+(Note that the flag order is of no importance whatsoever - the output will still be the same!)
 It is a good idea to first run the program with the '-h' flag, as in
 
 `./patient-generator -h`
