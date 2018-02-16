@@ -4,6 +4,12 @@ This repository generates a list of patients with random parameters
 and implements a database interface where the results can be filtered
 according to search parameters.
 
+## Features
+This tool automatically generates a given number of random patients and after every execution it outputs:
+* A single "all.txt" file containing all the generated patients
+* Individual \*.txt files containing columns of individual parameters - useful when porting to Excel / Matlab or other data processing tools
+* A single "patients.html" file with all the generated patients' data, adapted for web browsers
+
 ## Instructions to build
 
 Here come some instructions to build and use the patient generation tool.
