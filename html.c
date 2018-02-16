@@ -31,30 +31,30 @@ int html_create(person_t * list, unsigned nr_persons)
     {
         person_t p = *(list + i);
         fprintf(fp, "<tr>\n");
-        fprintf(fp, "\t<th>%u</th>\n", i);
-        fprintf(fp, "\t<th>%u</th>\n", p.age);
-        fprintf(fp, "\t<th>%c</th>\n", p.sex);
-        fprintf(fp, "\t<th>%c</th>\n", p.hta);
-        fprintf(fp, "\t<th>%c</th>\n", p.hsa);
-        fprintf(fp, "\t<th>%c</th>\n", p.inc);
-        fprintf(fp, "\t<th>%c</th>\n", (p.fisher == '-' ? p.fisher : p.fisher + 48));
+        fprintf(fp, "\t<td>%u</td>\n", i + 1);
+        fprintf(fp, "\t<td>%u</td>\n", p.age);
+        fprintf(fp, "\t<td>%c</td>\n", p.sex);
+        fprintf(fp, "\t<td>%c</td>\n", p.hta);
+        fprintf(fp, "\t<td>%c</td>\n", p.hsa);
+        fprintf(fp, "\t<td>%c</td>\n", p.inc);
+        fprintf(fp, "\t<td>%c</td>\n", (p.fisher == '-' ? p.fisher : p.fisher + 48));
         switch (p.glasg)
         {
             case NONE:
-                fprintf(fp, "\t<th>--</th>\n");
+                fprintf(fp, "\t<td>--</td>\n");
                 break;
             case LIGHT:
-                fprintf(fp, "\t<th>Light</th>\n");
+                fprintf(fp, "\t<td>Light</td>\n");
                 break;
             case MODERATE:
-                fprintf(fp, "\t<th>Moderate</th>\n");
+                fprintf(fp, "\t<td>Moderate</td>\n");
                 break;
             case SEVERE:
-                fprintf(fp, "\t<th>Severe</th>\n");
+                fprintf(fp, "\t<td>Severe</td>\n");
                 break;
         }
-        fprintf(fp, "\t<th>%c</th>\n", (p.wfns == '-' ? p.wfns: p.wfns+ 48));
-        fprintf(fp, "\t<th>%c</th>\n", p.treat);
+        fprintf(fp, "\t<td>%c</td>\n", (p.wfns == '-' ? p.wfns: p.wfns+ 48));
+        fprintf(fp, "\t<td>%c</td>\n", p.treat);
         fprintf(fp, "</tr>\n");
     }
 
