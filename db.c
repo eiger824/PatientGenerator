@@ -374,7 +374,6 @@ void db_interactive_mode()
     }
     // Free line
     free(line);
-    printf("Here!\n");
 }
 
 int db_parse_query(char * line)

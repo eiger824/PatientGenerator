@@ -51,11 +51,11 @@ int: clean ${TXTS} ${BUILD} ${PROGRAM} with-db
 
 run:
 	clear
-	./test
+	./${PROGRAM}
 
 with-db:
 	clear
-	./test -i
+	./${PROGRAM} -i
 
 clean:
 	rm -rf *~ ${PROGRAM} ${BUILD} ${TXTS}
