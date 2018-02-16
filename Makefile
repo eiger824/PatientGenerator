@@ -6,6 +6,7 @@ LDFLAGS			=
 
 BUILD 			= build
 TXTS			= txts
+HTMLS			= html
 
 PROGRAM 		= patient-generator 
 OBJS 			= ${BUILD}/dll.o \
@@ -13,15 +14,19 @@ OBJS 			= ${BUILD}/dll.o \
 				  ${BUILD}/utils.o \
 				  ${BUILD}/timelib.o \
 				  ${BUILD}/files.o \
+				  ${BUILD}/html.o \
 				  ${BUILD}/randomize.o
 
-all: clean ${TXTS} ${BUILD} ${PROGRAM} 
+all: clean ${TXTS} ${HTMLS} ${BUILD} ${PROGRAM} 
 
 ${TXTS}:
 	test -d ${TXTS} || mkdir ${TXTS} 
 
 ${BUILD}:
 	test -d ${BUILD} || mkdir ${BUILD} 
+
+${HTMLS}:
+	test -d ${HTMLS} || mkdir ${HTMLS}
 
 ${PROGRAM}: ${OBJS} 
 	${CC} ${CFLAGS} $^ ${LDFLAGS} -o ${BUILD}/$@
@@ -43,6 +48,9 @@ ${BUILD}/files.o: files.c files.h
 ${BUILD}/timelib.o: timelib.c timelib.h
 	${CC} ${CFLAGS} ${CFLAGS_COMPILE} $< -o $@
 
+${BUILD}/html.o: html.c html.h
+	${CC} ${CFLAGS} ${CFLAGS_COMPILE} $< -o $@
+
 ${BUILD}/randomize.o: randomize.c dll.c dll.h db.c db.h
 	${CC} ${CFLAGS} ${CFLAGS_COMPILE} $< -o $@
 	
@@ -58,5 +66,5 @@ with-db:
 	./${PROGRAM} -i
 
 clean:
-	rm -rf *~ ${PROGRAM} ${BUILD} ${TXTS}
+	rm -rf *~ ${PROGRAM} ${BUILD} ${TXTS} ${HTMLS}
 

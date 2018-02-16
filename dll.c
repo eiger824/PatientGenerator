@@ -236,3 +236,8 @@ void dll_select_all_from(dll_t * list, param_t param, int val)
         if (!list->count) break;
     }
 }
+
+int dll_is_empty(dll_t * dlls)
+{
+    return !dlls->count;
+}

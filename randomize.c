@@ -10,6 +10,7 @@
 #include "def.h"
 #include "dll.h"
 #include "db.h"
+#include "html.h"
 #include "timelib.h"
 #include "files.h"
 
@@ -164,6 +165,8 @@ int main(int argc, char * argv[])
         // Print the whole person entry
         print_to_file(OUT_FILE, &subjects[i], i);
     }
+    // Create html
+    html_create(subjects, nr_persons);
     // Init db
     db_init(subjects, nr_persons, min_age, max_age);
     // Output some statistics

@@ -39,4 +39,6 @@ void dll_empty(dll_t *dlls);
 dll_t * dll_copy_list(dll_t * rhs);
 void dll_select_all_from(dll_t * list, param_t param, int val);
 
+int dll_is_empty(dll_t * dlls);
+
 #endif /* __DOUBLYLINKEDLIST_H */
