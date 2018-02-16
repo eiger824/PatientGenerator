@@ -36,7 +36,8 @@ Then, the program shall be run like:
 * -n
 * -v
 
-(Note that the flag order is of no importance whatsoever - the output will still be the same!)
+(Note that the flag order is of no importance whatsoever - the output will still be the same!).
+
 It is a good idea to first run the program with the '-h' flag, as in
 
 `./patient-generator -h`
@@ -71,13 +72,23 @@ As in the previous example, all the generated patients will end up in the direct
 `./patient-generator -n 100 -m 18 -M 90 -i`
 
 The above command will, as in the previous example, generate 100 random patients, within the ages of 18 and 90, and notice the presence of the flag 'i'. This will cause the program to enter a database where queries can be made and show patients meeting a specific search criteria.
+### Incomplete input
+This is the case where the user partially inputs data to the program. Imagine the following command:
+
+`./patient-generator -m 14 -i`
+
+*Only* the minimum age has been provided (together with the 'i' flag, which will make the program enter the interactive database after the generation). The program will still ask the user for the two remaining data in order to generate the random patients:
+* The maximum age
+* The number of patients to generate
 
 ## Bugs, improvements & more
 Any bugs, improvements or flaws are happily accepted, I will try to correct them as soon as possible.
 
-## TODO
-Add information of the use of the database when running in interactive mode. In the meantime, run
+## TODO & Future work
+* Add information of the use of the database when running in interactive mode. In the meantime, run
 
 `help`
 
 when inside the database to show all available options and general use.
+* Output an html document where the results can be seen in a web browser
+* Make it graphical in order to ease up people's lives and 'save' them from the beauty of the terminal ...
