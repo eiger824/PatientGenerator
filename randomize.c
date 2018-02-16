@@ -95,6 +95,16 @@ int main(int argc, char * argv[])
         }
     }
 
+    if (optind < argc)
+    {
+        for (int i = optind; i < argc; i++)
+        {
+            printf ("Non-option argument -- '%s'\n", argv[i]);
+        }
+        help(argv[0]);
+        exit(1);
+    }
+
     // Initialize random seed
     srand (time (NULL));
 

@@ -27,6 +27,15 @@ Then, the program shall be run like:
 
 `./patient-generator [OPTIONS]`
 
+, where [OPTIONS] can be any of the following:
+
+* -h
+* -i
+* -M
+* -m
+* -n
+* -v
+
 It is a good idea to first run the program with the '-h' flag, as in
 
 `./patient-generator -h`
