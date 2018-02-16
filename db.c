@@ -45,10 +45,10 @@ void db_init(person_t * p, int nr_persons, int min_age, int max_age)
     {
         dll_insert_end(db_list, q++);
     }
-    free(p);
 #ifdef DEBUG_ENABLED
     dll_print(db_list);
 #endif
+    free(p);
     // Update min & max ages
     db_min_age = min_age;
     db_max_age = max_age;

@@ -35,7 +35,7 @@ void dump_statistics(int nr_persons, int interactive)
         printf("\n*****************************************************************\n");
         printf("Done! %d patients were generated in %.3f seconds\n",
                 nr_persons, time_get_sim_seconds());
-        printf("(See all files under txts/ directory)\n");
+        printf("(See all files under txts/ directory and the html/patients.html file)\n");
         printf("*****************************************************************\n");
     }
 

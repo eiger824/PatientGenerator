@@ -1,6 +1,5 @@
 CC 				= gcc
-#DEBUG 			= -DDEBUG_ENABLED
-CFLAGS 			= -Wall -Wextra -Wpedantic -g --std=c11 -fPIC ${DEBUG}
+CFLAGS 			= -Wall -Wextra -Wpedantic -g --std=c11 -fPIC ${DBG}
 CFLAGS_COMPILE 	= -c
 LDFLAGS			= 
 
@@ -16,6 +15,12 @@ OBJS 			= ${BUILD}/dll.o \
 				  ${BUILD}/files.o \
 				  ${BUILD}/html.o \
 				  ${BUILD}/randomize.o
+
+ifeq ($(DEBUG),1)
+	DBG=-DDEBUG_ENABLED
+else
+	DBG=
+endif
 
 all: clean ${TXTS} ${HTMLS} ${BUILD} ${PROGRAM} 
 
