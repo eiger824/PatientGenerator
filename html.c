@@ -40,7 +40,6 @@ void html_fill_header(FILE * fp)
     html_add_line(fp, "\tfont-family: arial, sans-serif;\n\tborder-collapse: collapse;\n\twidth: 100%%;\n}");
     html_add_line(fp, "\ntd, th {");
     html_add_line(fp, "\tborder: 1px solid #dddddd;\n\ttext-align: left;\n\tpadding: 8px;\n}");
-    html_add_line(fp, "\ntr:nth-child(even) {\n\tbackground-color: #dddddd;\n}");
     html_add_line(fp, "tr:hover {background-color:#99ccff;}");
     html_add_line(fp, "</style>\n</head>");
     html_add_line(fp, "<body>");
@@ -149,7 +148,14 @@ void html_set_fieldset(FILE * fp, unsigned nr_persons, int min_age, int max_age)
 void html_fill_table(FILE * fp, person_t * list, unsigned nr_persons)
 {
     // Enter a new entry with the information in the list
-    html_add_line(fp, "<table id=\"patientTable\">\n<tr>");
+    html_add_line(fp, "<table id=\"patientTable\">");
+    html_add_line(fp, "<colgroup>");
+    for (int i = 0; i < 10; ++i)
+    {
+        html_add_line(fp, "\t<col id=\"c%d\">", i);
+    }
+    html_add_line(fp, "</colgroup>");
+    html_add_line(fp, "<tr>");
     html_add_line(fp, "\t<th>Patient</th>");
     html_add_line(fp, "\t<th>Age</th>");
     html_add_line(fp, "\t<th>Sex</th>");
@@ -211,6 +217,16 @@ void html_add_scripts(FILE * fp)
     html_add_line(fp, "\tfilter_glasgow = document.getElementById(\"select_glasgow\").value.toUpperCase();");
     html_add_line(fp, "\tfilter_wfns = document.getElementById(\"select_wfns\").value.toUpperCase();");
     html_add_line(fp, "\tfilter_treat = document.getElementById(\"select_treat\").value.toUpperCase();\n");
+    html_add_line(fp, "\t// Color columns with the given search parameters");
+    html_add_line(fp, "\tif (filter_age != \"NONE\") {\n\t\tdocument.getElementById(\"c1\").style = \"background-color: #ff9966;\";\n\t}");
+    html_add_line(fp, "\tif (filter_sex != \"NONE\") {\n\t\tdocument.getElementById(\"c2\").style = \"background-color: #ff9966;\";\n\t}");
+    html_add_line(fp, "\tif (filter_hta != \"NONE\") {\n\t\tdocument.getElementById(\"c3\").style = \"background-color: #ff9966;\";\n\t}");
+    html_add_line(fp, "\tif (filter_hsa != \"NONE\") {\n\t\tdocument.getElementById(\"c4\").style = \"background-color: #ff9966;\";\n\t}");
+    html_add_line(fp, "\tif (filter_inc != \"NONE\") {\n\t\tdocument.getElementById(\"c5\").style = \"background-color: #ff9966;\";\n\t}");
+    html_add_line(fp, "\tif (filter_fisher != \"NONE\") {\n\t\tdocument.getElementById(\"c6\").style = \"background-color: #ff9966;\";\n\t}");
+    html_add_line(fp, "\tif (filter_glasgow != \"NONE\") {\n\t\tdocument.getElementById(\"c7\").style = \"background-color: #ff9966;\";\n\t}");
+    html_add_line(fp, "\tif (filter_wfns != \"NONE\") {\n\t\tdocument.getElementById(\"c8\").style = \"background-color: #ff9966;\";\n\t}");
+    html_add_line(fp, "\tif (filter_treat != \"NONE\") {\n\t\tdocument.getElementById(\"c9\").style = \"background-color: #ff9966;\";\n\t}");
 
     html_add_line(fp, "\ttable = document.getElementById(\"patientTable\");");
     html_add_line(fp, "\ttr = table.getElementsByTagName(\"tr\");\n");
@@ -240,7 +256,7 @@ void html_add_scripts(FILE * fp)
     html_add_line(fp, "\t\t\t\tn++;");
     html_add_line(fp, "\t\t\t} else {");
     html_add_line(fp, "\t\t\t\ttr[i].style.display = \"none\";\n\t\t\t}\n\t\t}\n\t}");
-    html_add_line(fp, "\tdocument.getElementById(\"nr_patients\").innerHTML = \"Number of patients: \" + n;\n}\n");
+    html_add_line(fp, "\tdocument.getElementById(\"nr_patients\").innerHTML = \"Number of patients: \" + n + \" (\" + (100 * n / (tr.length - 1)).toFixed(2) + \" %)\";\n}\n");
 
     html_add_line(fp, "function clearFilters() {\n");
     html_add_line(fp, "\tvar table, tr, td, i;");
@@ -258,8 +274,17 @@ void html_add_scripts(FILE * fp)
     html_add_line(fp, "\tdocument.getElementById(\"select_glasgow\").value = \"none\";");
     html_add_line(fp, "\tdocument.getElementById(\"select_wfns\").value = \"none\";");
     html_add_line(fp, "\tdocument.getElementById(\"select_treat\").value = \"none\";");
-    html_add_line(fp, "\tvar n = tr.length;\n\tn = n - 1;");
-    html_add_line(fp, "\tdocument.getElementById(\"nr_patients\").innerHTML = \"Number of patients: \" + n;");
+    html_add_line(fp, "\t// Reset column coloring");
+    html_add_line(fp, "\tdocument.getElementById(\"c1\").style = \"background-color: #ffffff;\";");
+    html_add_line(fp, "\tdocument.getElementById(\"c2\").style = \"background-color: #ffffff;\";");
+    html_add_line(fp, "\tdocument.getElementById(\"c3\").style = \"background-color: #ffffff;\";");
+    html_add_line(fp, "\tdocument.getElementById(\"c4\").style = \"background-color: #ffffff;\";");
+    html_add_line(fp, "\tdocument.getElementById(\"c5\").style = \"background-color: #ffffff;\";");
+    html_add_line(fp, "\tdocument.getElementById(\"c6\").style = \"background-color: #ffffff;\";");
+    html_add_line(fp, "\tdocument.getElementById(\"c7\").style = \"background-color: #ffffff;\";");
+    html_add_line(fp, "\tdocument.getElementById(\"c8\").style = \"background-color: #ffffff;\";");
+    html_add_line(fp, "\tdocument.getElementById(\"c9\").style = \"background-color: #ffffff;\";");
+    html_add_line(fp, "\tdocument.getElementById(\"nr_patients\").innerHTML = \"Number of patients: \" + (tr.length - 1);");
     html_add_line(fp, "}");
 
     html_add_line(fp, "</script>");
