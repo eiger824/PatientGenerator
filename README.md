@@ -92,5 +92,5 @@ Any bugs, improvements or flaws are happily accepted, I will try to correct them
 
 ## TODO & Future work
 * Add information of the use of the database when running in interactive mode. In the meantime, run `help` when inside the database to show all available options and general use.
-* Output an html document where the results can be seen in a web browser
+* ~~Output an html document where the results can be seen in a web browser~~ Done.
 * Make it graphical in order to ease up people's lives and 'save' them from the beauty of the terminal ...
