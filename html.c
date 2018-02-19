@@ -256,7 +256,7 @@ void html_add_scripts(FILE * fp)
     html_add_line(fp, "\t\t\t\tn++;");
     html_add_line(fp, "\t\t\t} else {");
     html_add_line(fp, "\t\t\t\ttr[i].style.display = \"none\";\n\t\t\t}\n\t\t}\n\t}");
-    html_add_line(fp, "\tdocument.getElementById(\"nr_patients\").innerHTML = \"Number of patients: \" + n + \" (\" + (100 * n / (tr.length - 1)).toFixed(2) + \" %)\";\n}\n");
+    html_add_line(fp, "\tdocument.getElementById(\"nr_patients\").innerHTML = \"Number of patients: \" + n + \" (\" + (100 * n / (tr.length - 1)).toFixed(2) + \"%% out of \" + (tr.length - 1) + \" patients)\";\n}\n");
 
     html_add_line(fp, "function clearFilters() {\n");
     html_add_line(fp, "\tvar table, tr, td, i;");
