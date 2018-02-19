@@ -166,7 +166,7 @@ int main(int argc, char * argv[])
         print_to_file(OUT_FILE, &subjects[i], i);
     }
     // Create html
-    html_export(subjects, nr_persons);
+    html_export(subjects, nr_persons, min_age, max_age);
     // Init db
     db_init(subjects, nr_persons, min_age, max_age);
     // Output some statistics
