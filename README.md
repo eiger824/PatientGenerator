@@ -10,6 +10,8 @@ This tool automatically generates a given number of random patients and after ev
 * Individual \*.txt files containing columns of individual parameters - useful when porting to Excel / Matlab or other data processing tools
 * A single "patients.html" file with all the generated patients' data, adapted for web browsers
 
+![alt text](screenshots/html-view.png "Description goes here")
+
 ## Instructions to build
 
 Here come some instructions to build and use the patient generation tool.
