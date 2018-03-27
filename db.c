@@ -365,7 +365,6 @@ void db_interactive_mode()
 
     db_help();
 
-    printf("[db] ");
     while (( nread = getline(&line, &len, stdin)) != -1)
     {
         if (( retcode = db_parse_query(line)) == -1)
