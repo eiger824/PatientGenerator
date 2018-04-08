@@ -21,5 +21,6 @@ double      utils_add    (double a,  double b);
 double      utils_subs   (double a,  double b);
 double      utils_mult   (double a,  double b);
 double      utils_div    (double a,  double b);
+int         parse_val(const char * msg, const char * error_msg);
 
 #endif /* UTILS_H_ */

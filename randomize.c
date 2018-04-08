@@ -3,6 +3,7 @@
 #include <string.h>
 #include <time.h>
 #include <sys/time.h>
+#include <ctype.h>
 #include <libgen.h>
 #include <getopt.h>
 
@@ -13,6 +14,7 @@
 #include "html.h"
 #include "timelib.h"
 #include "files.h"
+#include "utils.h"
 
 
 // Ptr to array of people
@@ -114,20 +116,12 @@ int main(int argc, char * argv[])
 
     // Input some data!
     if (nr_persons == -1)
-    {
-        printf("Enter number of patients: ");
-        scanf("%d", &nr_persons);
-    }
+        nr_persons = parse_val("Enter number of patients: ", "(Please enter a positive number)");
     if (min_age == -1)
-    {
-        printf("Enter age range (MIN): ");
-        scanf("%d", &min_age);
-    }
+        min_age = parse_val("Enter age range (MIN): ", "(Please enter a minimum age greater than 1)");
     if (max_age == -1)
-    {
-        printf("Enter age range (MAX): ");
-        scanf("%d", &max_age);
-    }
+        max_age = parse_val("Enter age range (MAX): ", "(Please enter a maximum age greater than 1)");
+
     // Check that min < max
     if (min_age > max_age)
     {
