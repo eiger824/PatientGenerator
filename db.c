@@ -22,7 +22,7 @@ static char * param_names[NR_PARAMS] =
     "age",
     "sex",
     "hta",
-    "hsa",
+    "sah",
     "inc",
     "fisher",
     "glasg",
@@ -59,7 +59,7 @@ dll_t * db_query_all(int flags, int * vals)
     uint8_t age = -1;
     int8_t sex = -1;
     int8_t hta = -1;
-    int8_t hsa = -1;
+    int8_t sah = -1;
     int8_t inc = -1;
     int8_t fisher = -1;
     int glasg = -1;
@@ -84,7 +84,7 @@ dll_t * db_query_all(int flags, int * vals)
                     hta = cval;
                     break;
                 case 3:
-                    hsa = cval;
+                    sah = cval;
                     break;
                 case 4:
                     inc = cval;
@@ -143,12 +143,12 @@ dll_t * db_query_all(int flags, int * vals)
         printf("Selected HTA, count now:\t%d\n", tmp_list->count);
 #endif
     }
-    if ((flags & HSA) == HSA)
+    if ((flags & SAH) == SAH)
     {
         // Loop through list and remove all non-matches from tmp_list
-        dll_select_all_from(tmp_list, HSA, hsa);
+        dll_select_all_from(tmp_list, SAH, sah);
 #ifdef DEBUG_ENABLED
-        printf("Selected HSA, count now:\t%d\n", tmp_list->count);
+        printf("Selected SAH, count now:\t%d\n", tmp_list->count);
 #endif
     }
     if ((flags & INC) == INC)
@@ -197,7 +197,7 @@ int db_query(int flags, const char *fmt, ...)
     uint8_t age = -1;
     int8_t sex = -1;
     int8_t hta = -1;
-    int8_t hsa = -1;
+    int8_t sah = -1;
     int8_t inc = -1;
     int8_t fisher = -1;
     int glasg = -1;
@@ -217,7 +217,7 @@ int db_query(int flags, const char *fmt, ...)
         else if (*fmt == '2')
             hta = va_arg(args, int);
         else if (*fmt == '3')
-            hsa = va_arg(args, int);
+            sah = va_arg(args, int);
         else if (*fmt == '4')
             inc = va_arg(args, int);
         else if (*fmt == '5')
@@ -269,12 +269,12 @@ int db_query(int flags, const char *fmt, ...)
         printf("Selected HTA, count now:\t%d\n", tmp_list->count);
 #endif
     }
-    if ((flags & HSA) == HSA)
+    if ((flags & SAH) == SAH)
     {
         // Loop through list and remove all non-matches from tmp_list
-        dll_select_all_from(tmp_list, HSA, hsa);
+        dll_select_all_from(tmp_list, SAH, sah);
 #ifdef DEBUG_ENABLED
-        printf("Selected HSA, count now:\t%d\n", tmp_list->count);
+        printf("Selected SAH, count now:\t%d\n", tmp_list->count);
 #endif
     }
     if ((flags & INC) == INC)
@@ -332,7 +332,7 @@ void db_help()
     printf("\nWelcome to the minimal patient database!\n");
     printf("\nPlease introduce your search queries in the following format:\n");
     printf("\n\t\t\tparam=key\n\n");
-    printf("List of available params:\tage,sex,hta,hsa,inc,fisher,glasg,wfns,treat\n");
+    printf("List of available params:\tage,sex,hta,sah,inc,fisher,glasg,wfns,treat\n");
     printf("List of available keys:\t\t0,1,2,... (for age), M (for male), F (for female), Y (for YES), N (for NO), L (for light), M (for moderate), S (for severe)\n");
     printf("List of available commands:\n");
     printf("\nexit/quit/end:\tTerminate database\n");
@@ -422,8 +422,8 @@ int db_parse_query(char * line)
                             strcat(print_buffer, (params_to_search[i] == 'Y' ? "positive, ":"negative, "));
                             break;
                         case 3:
-                            flags |= HSA;
-                            strcat(print_buffer, "with HSA ");
+                            flags |= SAH;
+                            strcat(print_buffer, "with SAH ");
                             strcat(print_buffer, (params_to_search[i] == 'Y' ? "positive, ":"negative, "));
                             break;
                         case 4:

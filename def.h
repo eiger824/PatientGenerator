@@ -6,7 +6,7 @@
 #define 	AGES_FILE		    "txts/ages.txt"
 #define		SEXES_FILE		    "txts/sexes.txt"
 #define 	HTA_FILE		    "txts/hta.txt"
-#define		HSA_FILE		    "txts/hsa.txt"
+#define		SAH_FILE		    "txts/sah.txt"
 #define     FISHER_FILE         "txts/fisher.txt"
 #define     GLASG_FILE          "txts/glasgow.txt"
 #define     WFNS_FILE           "txts/wfns.txt"
@@ -28,7 +28,7 @@ typedef enum param_type
     AGE     = 0x00000001,
     SEX     = 0x00000002,
     HTA     = 0x00000004,
-    HSA     = 0x00000008,
+    SAH     = 0x00000008,
     INC     = 0x00000010,
     FISHER  = 0x00000020,
     GLASG   = 0x00000040,

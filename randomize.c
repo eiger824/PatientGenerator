@@ -145,9 +145,9 @@ int main(int argc, char * argv[])
         subjects[i].age = min_age + rand() % (max_age + 1 - min_age);
         subjects[i].sex = (rand() < RAND_MAX / 2) ? 'M' : 'F';
         subjects[i].hta = (rand() < RAND_MAX / 2) ? 'Y' : 'N';
-        subjects[i].hsa = (rand() < RAND_MAX / 2) ? 'Y' : 'N';
-        // depending on hsa, which glasgow level
-        if (subjects[i].hsa == 'Y')
+        subjects[i].sah = (rand() < RAND_MAX / 2) ? 'Y' : 'N';
+        // depending on sah, which glasgow level
+        if (subjects[i].sah == 'Y')
         {
             subjects[i].inc = 'N';
             subjects[i].fisher = FISHER_MIN + rand() % (FISHER_MAX + 1 - FISHER_MIN);

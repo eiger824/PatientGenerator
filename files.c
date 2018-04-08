@@ -18,8 +18,8 @@ int print_separate_file(param_t p, int val)
         case HTA:
             strcpy(fname, HTA_FILE);
             break;
-        case HSA:
-            strcpy(fname, HSA_FILE);
+        case SAH:
+            strcpy(fname, SAH_FILE);
             break;
         case INC:
             strcpy(fname, INC_FILE);
@@ -95,7 +95,7 @@ int print_to_file(const char *fname, const person_t * ptr, unsigned index)
     // New write
     if (ptr == NULL)
     {
-        fprintf(f, "Patient\tAge\tSex\tHTA\tHSA\tIncident Fisher\tGlasgow\t\tWFNS\tTreat\n");
+        fprintf(f, "Patient\tAge\tSex\tHTA\tSAH\tIncident Fisher\tGlasgow\t\tWFNS\tTreat\n");
         fprintf(f, "-------------------------------------------");
         fprintf(f, "-------------------------------------------\n");
     }
@@ -122,7 +122,7 @@ int print_to_file(const char *fname, const person_t * ptr, unsigned index)
                 ptr->age,
                 ptr->sex,
                 ptr->hta,
-                ptr->hsa,
+                ptr->sah,
                 ptr->inc,
                 (ptr->wfns == '-' ? ptr->fisher : ptr->fisher + 48),
                 glasgow_type,
@@ -135,7 +135,7 @@ int print_to_file(const char *fname, const person_t * ptr, unsigned index)
         print_separate_file(AGE, ptr->age);
         print_separate_file(SEX, ptr->sex);
         print_separate_file(HTA, ptr->hta);
-        print_separate_file(HSA, ptr->hsa);
+        print_separate_file(SAH, ptr->sah);
         print_separate_file(INC, ptr->inc);
         print_separate_file(FISHER, ptr->fisher);
         print_separate_file(GLASG, ptr->glasg);

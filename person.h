@@ -16,7 +16,7 @@ typedef struct person_type
     uint8_t age;
     int8_t sex;
     int8_t hta;
-    int8_t hsa;
+    int8_t sah;
     int8_t inc;
     int8_t fisher;
     gtype_t glasg;

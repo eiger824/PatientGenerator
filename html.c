@@ -86,7 +86,7 @@ void html_set_fieldset(FILE * fp, unsigned nr_persons, int min_age, int max_age)
     html_add_line(fp, "\t\t<option value=\"n\">N</option>");
     html_add_line(fp, "\t</select><br>");
 
-    html_add_line(fp, "\tHSA: <select id=\"select_hsa\" >");
+    html_add_line(fp, "\tSAH: <select id=\"select_sah\" >");
     html_add_line(fp, "\t\t<option value=\"none\">Select...</option>");
     html_add_line(fp, "\t\t<option value=\"y\">Y</option>");
     html_add_line(fp, "\t\t<option value=\"n\">N</option>");
@@ -160,7 +160,7 @@ void html_fill_table(FILE * fp, person_t * list, unsigned nr_persons)
     html_add_line(fp, "\t<th>Age</th>");
     html_add_line(fp, "\t<th>Sex</th>");
     html_add_line(fp, "\t<th>HTA</th>");
-    html_add_line(fp, "\t<th>HSA</th>");
+    html_add_line(fp, "\t<th>SAH</th>");
     html_add_line(fp, "\t<th>Incident</th>");
     html_add_line(fp, "\t<th>Fisher</th>");
     html_add_line(fp, "\t<th>Glasgow</th>");
@@ -176,7 +176,7 @@ void html_fill_table(FILE * fp, person_t * list, unsigned nr_persons)
         html_add_line(fp, "\t<td>%u</td>", p.age);
         html_add_line(fp, "\t<td>%c</td>", p.sex);
         html_add_line(fp, "\t<td>%c</td>", p.hta);
-        html_add_line(fp, "\t<td>%c</td>", p.hsa);
+        html_add_line(fp, "\t<td>%c</td>", p.sah);
         html_add_line(fp, "\t<td>%c</td>", p.inc);
         html_add_line(fp, "\t<td>%c</td>", (p.fisher == '-' ? p.fisher : p.fisher + 48));
         switch (p.glasg)
@@ -205,13 +205,13 @@ void html_add_scripts(FILE * fp)
 {
     html_add_line(fp, "<script>");
     html_add_line(fp, "function setFilters() {\n");
-    html_add_line(fp, "\tvar filter_age, filter_sex, filter_hta, filter_hsa, filter_inc, filter_fisher, filter_glasgow, filter_wfns, filter_treat;");
+    html_add_line(fp, "\tvar filter_age, filter_sex, filter_hta, filter_sah, filter_inc, filter_fisher, filter_glasgow, filter_wfns, filter_treat;");
     html_add_line(fp, "\tvar td, td1, td2, td3, td4, td5, td6, td7, td8, td9;");
     html_add_line(fp, "\tvar table, tr, td, i, n;\n");
     html_add_line(fp, "\tfilter_age = document.getElementById(\"select_age\").value.toUpperCase();");
     html_add_line(fp, "\tfilter_sex = document.getElementById(\"select_sex\").value.toUpperCase();");
     html_add_line(fp, "\tfilter_hta = document.getElementById(\"select_hta\").value.toUpperCase();");
-    html_add_line(fp, "\tfilter_hsa = document.getElementById(\"select_hsa\").value.toUpperCase();");
+    html_add_line(fp, "\tfilter_sah = document.getElementById(\"select_sah\").value.toUpperCase();");
     html_add_line(fp, "\tfilter_inc = document.getElementById(\"select_inc\").value.toUpperCase();");
     html_add_line(fp, "\tfilter_fisher = document.getElementById(\"select_fisher\").value.toUpperCase();");
     html_add_line(fp, "\tfilter_glasgow = document.getElementById(\"select_glasgow\").value.toUpperCase();");
@@ -221,7 +221,7 @@ void html_add_scripts(FILE * fp)
     html_add_line(fp, "\tif (filter_age != \"NONE\") {\n\t\tdocument.getElementById(\"c1\").style = \"background-color: #ff9966;\";\n\t}");
     html_add_line(fp, "\tif (filter_sex != \"NONE\") {\n\t\tdocument.getElementById(\"c2\").style = \"background-color: #ff9966;\";\n\t}");
     html_add_line(fp, "\tif (filter_hta != \"NONE\") {\n\t\tdocument.getElementById(\"c3\").style = \"background-color: #ff9966;\";\n\t}");
-    html_add_line(fp, "\tif (filter_hsa != \"NONE\") {\n\t\tdocument.getElementById(\"c4\").style = \"background-color: #ff9966;\";\n\t}");
+    html_add_line(fp, "\tif (filter_sah != \"NONE\") {\n\t\tdocument.getElementById(\"c4\").style = \"background-color: #ff9966;\";\n\t}");
     html_add_line(fp, "\tif (filter_inc != \"NONE\") {\n\t\tdocument.getElementById(\"c5\").style = \"background-color: #ff9966;\";\n\t}");
     html_add_line(fp, "\tif (filter_fisher != \"NONE\") {\n\t\tdocument.getElementById(\"c6\").style = \"background-color: #ff9966;\";\n\t}");
     html_add_line(fp, "\tif (filter_glasgow != \"NONE\") {\n\t\tdocument.getElementById(\"c7\").style = \"background-color: #ff9966;\";\n\t}");
@@ -246,7 +246,7 @@ void html_add_scripts(FILE * fp)
     html_add_line(fp, "\t\t\tif ((td.innerHTML.toUpperCase().indexOf(filter_age) > -1 || filter_age == \"NONE\") &&");
     html_add_line(fp, "\t\t\t\t(td2.innerHTML.toUpperCase().indexOf(filter_sex) > -1 || filter_sex == \"NONE\") &&");
     html_add_line(fp, "\t\t\t\t(td3.innerHTML.toUpperCase().indexOf(filter_hta) > -1 || filter_hta == \"NONE\") &&");
-    html_add_line(fp, "\t\t\t\t(td4.innerHTML.toUpperCase().indexOf(filter_hsa) > -1 || filter_hsa == \"NONE\") &&");
+    html_add_line(fp, "\t\t\t\t(td4.innerHTML.toUpperCase().indexOf(filter_sah) > -1 || filter_sah == \"NONE\") &&");
     html_add_line(fp, "\t\t\t\t(td5.innerHTML.toUpperCase().indexOf(filter_inc) > -1 || filter_inc == \"NONE\") &&");
     html_add_line(fp, "\t\t\t\t(td6.innerHTML.toUpperCase().indexOf(filter_fisher) > -1 || filter_fisher == \"NONE\") &&");
     html_add_line(fp, "\t\t\t\t(td7.innerHTML.toUpperCase().indexOf(filter_glasgow) > -1 || filter_glasgow == \"NONE\") &&");
@@ -268,7 +268,7 @@ void html_add_scripts(FILE * fp)
     html_add_line(fp, "\tdocument.getElementById(\"select_age\").value = \"none\";");
     html_add_line(fp, "\tdocument.getElementById(\"select_sex\").value = \"none\";");
     html_add_line(fp, "\tdocument.getElementById(\"select_hta\").value = \"none\";");
-    html_add_line(fp, "\tdocument.getElementById(\"select_hsa\").value = \"none\";");
+    html_add_line(fp, "\tdocument.getElementById(\"select_sah\").value = \"none\";");
     html_add_line(fp, "\tdocument.getElementById(\"select_inc\").value = \"none\";");
     html_add_line(fp, "\tdocument.getElementById(\"select_fisher\").value = \"none\";");
     html_add_line(fp, "\tdocument.getElementById(\"select_glasgow\").value = \"none\";");

@@ -153,12 +153,12 @@ void dll_print(dll_t *dlls)
                 strcpy(glasgow_type, "Severe  ");
                 break;
         }
-        printf("%d)\tAge: %d, Sex: %c, HTA: %c, HSA: %c, Fisher: %c, Glasgow: %s, WFNS: %c, Inc: %c, Treat: %c\n",
+        printf("%d)\tAge: %d, Sex: %c, HTA: %c, SAH: %c, Fisher: %c, Glasgow: %s, WFNS: %c, Inc: %c, Treat: %c\n",
                 ++index, // Start with 1 ......
                 ptr->age,
                 ptr->sex,
                 ptr->hta,
-                ptr->hsa,
+                ptr->sah,
                 (ptr->fisher == '-' ? ptr->fisher : ptr->fisher + 48),
                 glasgow_type,
                 (ptr->wfns == '-' ? ptr->wfns : ptr->wfns + 48),
@@ -201,8 +201,8 @@ void dll_select_all_from(dll_t * list, param_t param, int val)
             case HTA:
                 which = nd->p->hta;
                 break;
-            case HSA:
-                which = nd->p->hsa;
+            case SAH:
+                which = nd->p->sah;
                 break;
             case INC:
                 which = nd->p->inc;
