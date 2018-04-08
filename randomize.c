@@ -22,7 +22,7 @@ static person_t *subjects;
 
 void acknowledgments()
 {
-    printf("Developed by Carlos Pagola, January 2018, version 0.4\n");
+    printf("Developed by Carlos Pagola, January 2018, version 0.5\n");
 }
 
 void dump_statistics(int nr_persons, int interactive)
